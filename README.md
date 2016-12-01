@@ -1,5 +1,5 @@
 # node-jquery-extend
-A tiny toolkit.
+A tiny toolkit, based on [node-jquery-lite](https://github.com/phonowell/node-jquery-lite).
 
 ## Install
 ```
