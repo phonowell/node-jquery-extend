@@ -1,12 +1,23 @@
 # node-jquery-extend
+
 A tiny toolkit, based on [node-jquery-lite](https://github.com/phonowell/node-jquery-lite).
 
 ## Install
+
 ```
 $ npm i node-jquery-extend
 ```
 
+## Usage
+
+```
+$ = require 'node-jquery-extend'
+
+$.i 'Hello world!'
+```
+
 ## Methods
+
 - `$.i()`
 - `$.info()`
 - `$.log()`
@@ -21,18 +32,23 @@ $ npm i node-jquery-extend
 - `$.timeStamp()`
     
 ## Attention
-This project is not **STABLE**.
+
+This project is **NOT STABLE**.
 
 ## Test
+
 ```
 $ npm test
 ```
 
 ## Updates
-Look [HERE](UPDATE.md).
+
+Look [HERE](update.md).
 
 ## Todo
-Look [HERE](TODO.md).
+
+Look [HERE](todo.md).
 
 ## License
-Look [HERE](LICENSE.md).
+
+Look [HERE](license.md).

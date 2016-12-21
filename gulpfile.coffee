@@ -1,6 +1,8 @@
 $ = require './index'
 _ = $._
 
+fs = require 'fs'
+
 argv = require('minimist')(process.argv.slice 2)
 
 gulp = require 'gulp'
@@ -15,8 +17,6 @@ yaml = require 'gulp-yaml'
 
 uglify = require 'gulp-uglify'
 lint = require 'gulp-coffeelint'
-
-process.on 'uncaughtException', (err) -> $.log err.stack # error
 
 # function
 
@@ -82,24 +82,20 @@ $.task 'noop', -> null
 $.task 'test', -> $.shell 'node test.js'
 
 $.task 'set', ->
-  if argv.version
-    fs = require 'fs'
 
-    # version
-    ver = argv.version
+  if !(ver = argv.version) then return
 
-    # function
-    fn = {}
+  fn = {}
 
-    # package
-    fn.package = (cb) ->
-      src = 'package.json'
-      gulp.src src
-      .pipe plumber()
-      .pipe using()
-      .pipe replace /"version": "[\d\.]+"/, "\"version\": \"#{ver}\""
-      .pipe gulp.dest ''
-      .on 'end', -> cb?()
+  # package
+  fn.package = (cb) ->
+    src = 'package.json'
+    gulp.src src
+    .pipe plumber()
+    .pipe using()
+    .pipe replace /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
+    .pipe gulp.dest ''
+    .on 'end', -> cb?()
 
-    # execute
-    fn.package -> fn.init -> fn.test()
+  # execute
+  fn.package -> fn.init -> fn.test()

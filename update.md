@@ -1,5 +1,7 @@
 # UPDATES
+
 ### v0.0.1 @ 12.1.2016
+
 - Added `$.i()`.
 - Added `$.info()`.
 - Added `$.log()`.
