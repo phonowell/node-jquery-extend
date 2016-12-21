@@ -20,7 +20,6 @@ lint = require 'gulp-coffeelint'
 
 # function
 
-# bind
 task = {}
 $.task = (name, fn) ->
   gulp.task name, ->
@@ -98,4 +97,4 @@ $.task 'set', ->
     .on 'end', -> cb?()
 
   # execute
-  fn.package -> fn.init -> fn.test()
+  fn.package()

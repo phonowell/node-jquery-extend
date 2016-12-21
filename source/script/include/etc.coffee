@@ -1,4 +1,3 @@
-# next
 $.next = (param...) ->
   [time, fn] = if !param[1] then [0, param[0]] else param
 
@@ -8,10 +7,8 @@ $.next = (param...) ->
 
   process.nextTick fn
 
-# log
 $.log = console.log
 
-# info
 $.info = (param...) ->
   [type, msg] = if !param[1] then ['default', param[0]] else param
 
@@ -31,7 +28,6 @@ $.info = (param...) ->
 
   msg
 
-# i
 $.i = (msg) ->
   $.log msg
   msg
@@ -63,7 +59,6 @@ $.timeStamp = (arg) ->
 
   date.getTime()
 
-# shell
 $.shell = (cmd, callback) ->
   fn = $.shell
   fn.platform or= (require 'os').platform()
@@ -77,7 +72,7 @@ $.shell = (cmd, callback) ->
     cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
   $.info 'shell', cmd
 
-  #execute
+  # execute
   child = fn.exec cmd
   child.stdout.on 'data', (data) -> fn.info data
   child.stderr.on 'data', (data) -> fn.info data

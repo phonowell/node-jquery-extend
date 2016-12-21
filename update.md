@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.2 @ 12.21.2016
+
+- Updated *gulp* files.
+
 ### v0.0.1 @ 12.1.2016
 
 - Added `$.i()`.
