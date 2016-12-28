@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-uglify": "^1.5.4",
     "gulp-using": "0.0.1",
-    "gulp-util": "^3.0.7",
+    "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.11",
     "gulp-yaml": "^1.0.1",
     "minimist": "^1.2.0"

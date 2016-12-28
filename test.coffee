@@ -2,26 +2,34 @@ $ = require './index'
 _ = $._
 
 # function
-$total = [0, 0]
-$.test = (a, b, msg) ->
-  $total[0]++
+$$ = {}
+
+$$.total = [0, 0]
+
+$$.test = (a, b, msg) ->
+  $$.total[0]++
   if a == b
-    $.info 'success', $.parseOK msg
+    $.info 'success', $$.parseOK msg
   else
-    $.info 'fail', $.parseOK msg, false
+    $.info 'fail', $$.parseOK msg, false
     $.log "# #{a} is not #{b}"
-    $total[1]++
+    $$.total[1]++
 
-$.devide = (title) -> $.log "#{_.repeat '-', 16}#{if title then "> #{title}" else ''}"
+$$.divide = (title) ->
+  $.log $$.divide['__string__']
+  if title
+    $.log title
+    $.log $$.divide['__string__']
+$$.divide['__string__'] = _.trim _.repeat '- ', 16
 
-$.parseOK = (msg, ok) ->
+$$.parseOK = (msg, ok) ->
   if !~msg.search /\[is]/
     return msg
   if ok == false
     return msg.replace /\[is]/, 'is not'
   msg.replace /\[is]/, 'is'
 
-$subject = [
+$$.subject = [
   1024 # number
   'hello world' # string
   true # boolean
@@ -41,26 +49,30 @@ $subject = [
 # $.info()
 
 # $.log()
+do ->
+  $$.divide '$.log()'
+  $$.test $.log == console.log, true
+  , "$.log() [is] console.log()"
 
 # $.next()
 
 # $.parseJson()
 do ->
-  $.devide '$.parseJson()'
-  for a, i in $subject
-    $.test _.isEqual($.parseJson($subject[i]), a), true
-    , "$.parseJson(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
+  $$.divide '$.parseJson()'
+  for a, i in $$.subject
+    $$.test _.isEqual($.parseJson($$.subject[i]), a), true
+    , "$.parseJson(#{$.parseString $$.subject[i]}) [is] #{$.parseString a}"
   map =[
     ['[1,2,3]', [1, 2, 3]]
     ['{a:1,b:2}', {a: 1, b: 2}]
   ]
   for a in map
-    $.test _.isEqual($.parseJson(a[0]), a[1]), true
+    $$.test _.isEqual($.parseJson(a[0]), a[1]), true
     , "$.parseJson(#{$.parseString a[0]}) [is] #{$.parseString a[1]}"
 
 # $.parsePts()
 do ->
-  $.devide '$.parsePts()'
+  $$.divide '$.parsePts()'
   for a in [
     [0, '0']
     [100, '100']
@@ -69,67 +81,67 @@ do ->
     [1e5, '10万']
     [1234567, '123.4万']
   ]
-    $.test $.parsePts(a[0]), a[1]
+    $$.test $.parsePts(a[0]), a[1]
     , "$.parsePts(#{$.parseString a[0]}) [is] #{a[1]}"
 
 # $.parseSafe()
 
 # $.parseShortDate()
 do ->
-  $.devide '$.parseShortDate()'
+  $$.divide '$.parseShortDate()'
   for a in [
     ['2012.12.21', '20121221']
     ['1999.1.1', '19990101']
     ['2050.2.28', '20500228']
   ]
-    $.test $.parseShortDate($.timeStamp a[0]), a[1]
+    $$.test $.parseShortDate($.timeStamp a[0]), a[1]
     , "$.parseShortDate(#{a[0]}) [is] #{a[1]}"
 
 # $.parseString()
 do ->
-  $.devide '$.parseString()'
+  $$.divide '$.parseString()'
   for a, i in [
     '1024'
     'hello world'
     'true'
     '[1,2,3]'
     '{"a":1,"b":2}'
-    $subject[5].toString()
-    $subject[6].toString()
-    $subject[7].toString()
-    $subject[8].toString()
+    $$.subject[5].toString()
+    $$.subject[6].toString()
+    $$.subject[7].toString()
+    $$.subject[8].toString()
     'null'
     'undefined'
     'NaN'
   ]
-    $.test $.parseString($subject[i]), a
-    , "$.parseString(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
+    $$.test $.parseString($$.subject[i]), a
+    , "$.parseString(#{$.parseString $$.subject[i]}) [is] #{$.parseString a}"
 
 # $.parseTemp()
 do ->
-  $.devide '$.parseTemp()'
+  $$.divide '$.parseTemp()'
   temp = '[a] is falling love with [b]!'
   arg =
     a: 'Homura'
     b: 'Madoka'
   res = $.parseTemp temp, arg
-  $.test res, 'Homura is falling love with Madoka!'
+  $$.test res, 'Homura is falling love with Madoka!'
   , "$.parseTemp(#{temp}, #{$.parseString arg}) [is] #{res}"
 
 # $.shell()
 
 # $.timeStamp()
 do ->
-  $.devide '$.timeStamp()'
+  $$.divide '$.timeStamp()'
 
   res = $.timeStamp()
   ts = _.floor $.now(), -3
-  $.test res, ts, "$.timeStamp() [is] #{ts}"
+  $$.test res, ts, "$.timeStamp() [is] #{ts}"
 
   now = $.now()
   res = $.timeStamp now
   ts = _.floor now, -3
-  $.test res, ts, "$.timeStamp(#{now}) [is] #{ts}"
+  $$.test res, ts, "$.timeStamp(#{now}) [is] #{ts}"
 
   list = [
     [2012, 12, 21]
@@ -143,7 +155,7 @@ do ->
     date.setFullYear a[0], a[1] - 1, a[2]
     date.setHours 0, 0, 0, 0
     ts = _.floor date.getTime(), -3
-    $.test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
+    $$.test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
 
   list = [
     [2012, 12, 21, 12, 21]
@@ -157,12 +169,12 @@ do ->
     date.setFullYear a[0], a[1] - 1, a[2]
     date.setHours a[3], a[4], 0, 0
     ts = _.floor date.getTime(), -3
-    $.test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
+    $$.test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
 
 # result
 $.next 500, ->
-  $.devide 'Result'
-  msg = "There has got #{$total[1]} fail(s) from #{$total[0]} test(s)."
+  $$.divide 'Result'
+  msg = "There has got #{$$.total[1]} fail(s) from #{$$.total[0]} test(s)."
   $.info 'result', msg
 
   $.next 500, -> process.exit()

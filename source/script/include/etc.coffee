@@ -1,32 +1,42 @@
-$.next = (param...) ->
-  [time, fn] = if !param[1] then [0, param[0]] else param
+$.next = (args...) ->
 
-  if time
-    setTimeout fn, time
+  [delay, callback] = switch args.length
+    when 1 then [0, args[0]]
+    else args
+
+  if !delay
+    process.nextTick callback
     return
 
-  process.nextTick fn
+  setTimeout callback, delay
 
 $.log = console.log
 
-$.info = (param...) ->
-  [type, msg] = if !param[1] then ['default', param[0]] else param
+$.info = (args...) ->
 
-  #time
-  d = new Date()
-  t = ((if a < 10 then '0' + a else a) for a in [d.getHours(), d.getMinutes(), d.getSeconds()]).join ':'
+  [method, type, msg] = switch args.length
+    when 1 then ['log', 'default', args[0]]
+    when 2 then ['log', args[0], args[1]]
+    else args
 
-  arr = ["[#{t}]"]
-  switch type
-    when 'default' then null
-    when 'success', 'done', 'ok' then arr.push "<#{type.toUpperCase()}>"
-    when 'fail', 'error', 'fatal' then arr.push "<#{type.toUpperCase()}>"
-    else arr.push "<#{type.toUpperCase()}>"
+  # time string
+  cache = $.info['__cache__']
+  short = _.floor _.now(), -3
+
+  if cache[0] != short
+    cache[0] = short
+    date = new Date()
+    cache[1] = (_.padStart a, 2, 0 for a in [date.getHours(), date.getMinutes(), date.getSeconds()]).join ':'
+
+  arr = ["[#{cache[1]}]"]
+  if type != 'default' then arr.push "<#{type.toUpperCase()}>"
   arr.push msg
 
-  $.log arr.join ' ' #log
+  console[method] arr.join ' ' # log
 
   msg
+
+$.info['__cache__'] = []
 
 $.i = (msg) ->
   $.log msg

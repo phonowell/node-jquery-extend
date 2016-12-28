@@ -1,5 +1,11 @@
 # UPDATES
 
+### v0.0.3 @ 12.28.2016
+
+- Updated `$.info()`.
+- Updated `$.next()`.
+- Updated *test* files.
+
 ### v0.0.2 @ 12.21.2016
 
 - Updated *gulp* files.
