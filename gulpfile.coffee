@@ -1,100 +1,54 @@
-$ = require './index'
-_ = $._
+$$ = require 'fire-keeper'
 
-fs = require 'fs'
+{_, Promise} = $$.library
 
-argv = require('minimist')(process.argv.slice 2)
+co = Promise.coroutine
 
-gulp = require 'gulp'
-watch = require 'gulp-watch'
-plumber = require 'gulp-plumber'
-include = require 'gulp-include'
-replace = require 'gulp-replace'
-using = require 'gulp-using'
+# config
+$$.config 'useHarmony', true
 
-coffee = require 'gulp-coffee'
-yaml = require 'gulp-yaml'
+# task
 
-uglify = require 'gulp-uglify'
-lint = require 'gulp-coffeelint'
+$$.task 'work', co -> yield $$.shell 'gulp watch'
 
-# function
+$$.task 'watch', ->
+  deb = _.debounce $$.task('build'), 1e3
+  $$.watch [
+    './source/index.coffee'
+    './source/include/**/*.coffee'
+  ], deb
 
-task = {}
-$.task = (name, fn) ->
-  gulp.task name, ->
-    $.info 'base', "running at #{project.base}"
-    task[name]()
-  task[name] = fn
-
-# param
-# project
-project = base: process.cwd()
-project.name = project.base.replace /.*\\|.*\//, ''
-
-path = source: './source'
-path.coffee = "#{path.source}/**/*.coffee"
-
-_coffee = -> coffee map: true
-_yaml = -> yaml safe: true
-
-$.task 'watch', ->
-  list = [
-    "#{path.source}/script/index.coffee"
-    "#{path.source}/script/include/**/*.coffee"
+$$.task 'build', co ->
+  yield $$.delete [
+    './index.js'
+    './source/index.js'
   ]
-  watch list, -> task.build()
+  yield $$.compile './source/index.coffee'
+  yield $$.copy './source/index.js'
 
-$.task 'build', ->
-  fn = {}
+$$.task 'lint', co -> yield $$.lint 'coffee'
 
-  fn.coffee = (cb) ->
-    gulp.src "#{path.source}/script/index.coffee"
-    .pipe plumber()
-    .pipe using()
-    .pipe include()
-    .pipe _coffee()
-    .pipe uglify()
-    .pipe gulp.dest './'
-    .on 'end', -> cb?()
+$$.task 'prepare', co ->
+  yield $$.delete [
+    './gulpfile.js'
+    './coffeelint.json'
+    './test.js'
+  ]
+  yield $$.compile './gulpfile.coffee'
+  yield $$.compile './coffeelint.yml'
+  yield $$.compile './test.coffee'
 
-  fn.coffee()
+$$.task 'set', co ->
 
-# lint
-$.task 'lint', ->
-  # coffee lint
-  gulp.src ['./gulpfile.coffee', './test.coffee', path.coffee]
-  .pipe plumber()
-  .pipe using()
-  .pipe lint()
-  .pipe lint.reporter()
+  if !(ver = $$.argv.version) then return
 
-$.task 'prepare', ->
-  gulp.src './coffeelint.yml'
-  .pipe plumber()
-  .pipe using()
-  .pipe _yaml()
-  .pipe gulp.dest './'
+  yield $$.replace './package.json'
+  , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
 
-$.task 'work', -> $.shell 'gulp watch'
-$.task 'noop', -> null
-$.task 'test', -> $.shell 'node test.js'
+  yield $$.replace './source/include/init.coffee'
+  , /version: '[\d.]+'/, "version: '#{ver}'"
 
-$.task 'set', ->
+  yield $$.replace './test.coffee'
+  , /version = '[\d.]+'/, "version = '#{ver}'"
 
-  if !(ver = argv.version) then return
-
-  fn = {}
-
-  # package
-  fn.package = (cb) ->
-    src = 'package.json'
-    gulp.src src
-    .pipe plumber()
-    .pipe using()
-    .pipe replace /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
-    .pipe gulp.dest ''
-    .on 'end', -> cb?()
-
-  # execute
-  fn.package()
+$$.task 'test', co -> yield $$.shell 'node test.js'

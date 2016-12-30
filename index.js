@@ -1,1 +1,196 @@
-(function(){var $,_,slice=[].slice;$=require("node-jquery-lite"),_=$._,module.exports=$,$.parseShortDate=function(e){var r,t,n,o,a,i;for(n="date"===$.type(e)?e:new Date(e),t=[n.getFullYear(),1+n.getMonth(),n.getDate()],o=a=0,i=t.length;a<i;o=++a)r=t[o],t[o]=$.parseString(r),o&&t[o].length<2&&(t[o]="0"+t[o]);return t.join("")},$.parseString=function(e){var r;switch($.type(r=e)){case"string":return r;case"array":return JSON.stringify({_obj:r}).replace(/\{(.*)\}/,"$1").replace(/"_obj":/,"");case"object":return JSON.stringify(r);default:return String(r)}},$.parsePts=function(e){var r;return(r=0|(e||0))>=1e5?(.001*r|0)/10+"万":r.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1,")},$.parseJson=$.parseJSON=function(data){var err,ref,res;if("string"!==$.type(data))return data;try{return res=eval("("+data+")"),"object"===(ref=$.type(res))||"array"===ref?res:data}catch(error){return err=error,data}},$.parseSafe=_.escape,$.parseTemp=function(e,r){var t,n,o;n=e;for(t in r)o=r[t],n=n.replace(new RegExp("\\["+t+"\\]","g"),o);return n},$.next=function(){var e,r,t,n;return e=1<=arguments.length?slice.call(arguments,0):[],n=function(){switch(e.length){case 1:return[0,e[0]];default:return e}}(),t=n[0],r=n[1],t?setTimeout(r,t):void process.nextTick(r)},$.log=console.log,$.info=function(){var e,r,t,n,o,a,i,u,s,c;return r=1<=arguments.length?slice.call(arguments,0):[],u=function(){switch(r.length){case 1:return["log","default",r[0]];case 2:return["log",r[0],r[1]];default:return r}}(),a=u[0],c=u[1],i=u[2],n=$.info.__cache__,s=_.floor(_.now(),-3),n[0]!==s&&(n[0]=s,o=new Date,n[1]=function(){var r,t,n,a;for(n=[o.getHours(),o.getMinutes(),o.getSeconds()],a=[],r=0,t=n.length;r<t;r++)e=n[r],a.push(_.padStart(e,2,0));return a}().join(":")),t=["["+n[1]+"]"],"default"!==c&&t.push("<"+c.toUpperCase()+">"),t.push(i),console[a](t.join(" ")),i},$.info.__cache__=[],$.i=function(e){return $.log(e),e},$.timeStamp=function(e){var r,t,n,o,a,i;return i=$.type(e),"number"===i?_.floor(e,-3):"string"!==i?_.floor(_.now(),-3):(a=_.trim(e).replace(/\s+/g," ").replace(/[-|\/]/g,"."),o=new Date,t=a.split(" "),n=t[0].split("."),o.setFullYear(n[0],n[1]-1,n[2]),(r=t[1])?(r=r.split(":"),o.setHours(r[0],r[1],r[2]||0,0)):o.setHours(0,0,0,0),o.getTime())},$.shell=function(e,r){var t,n;return n=$.shell,n.platform||(n.platform=require("os").platform()),n.exec||(n.exec=require("child_process").exec),n.info||(n.info=function(e){var r;if(r=$.trim(e),r.length)return $.log(r.replace(/\r/g,"\n").replace(/\n{2,}/g,""))}),"array"===$.type(e)&&(e="win32"===n.platform?e.join("&"):e.join("&&")),$.info("shell",e),t=n.exec(e),t.stdout.on("data",function(e){return n.info(e)}),t.stderr.on("data",function(e){return n.info(e)}),t.on("close",function(){return"function"==typeof r?r():void 0})}}).call(this);
+(function() {
+  var $, _,
+    slice = [].slice;
+
+  $ = require('node-jquery-lite');
+
+  _ = $._;
+
+  module.exports = $;
+
+  $.parseShortDate = function(param) {
+    var a, arr, date, i, j, len;
+    date = $.type(param) === 'date' ? param : new Date(param);
+    arr = [date.getFullYear(), 1 + date.getMonth(), date.getDate()];
+    for (i = j = 0, len = arr.length; j < len; i = ++j) {
+      a = arr[i];
+      arr[i] = $.parseString(a);
+      if (i && arr[i].length < 2) {
+        arr[i] = '0' + arr[i];
+      }
+    }
+    return arr.join('');
+  };
+
+  $.parseString = function(data) {
+    var d;
+    switch ($.type(d = data)) {
+      case 'string':
+        return d;
+      case 'array':
+        return (JSON.stringify({
+          _obj: d
+        })).replace(/\{(.*)\}/, '$1').replace(/"_obj":/, '');
+      case 'object':
+        return JSON.stringify(d);
+      default:
+        return String(d);
+    }
+  };
+
+  $.parsePts = function(number) {
+    var n;
+    if ((n = (number || 0) | 0) >= 1e5) {
+      return (((n * 0.001) | 0) / 10) + '万';
+    } else {
+      return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    }
+  };
+
+  $.parseJson = $.parseJSON = function(data) {
+    var err, ref, res;
+    if ($.type(data) !== 'string') {
+      return data;
+    }
+    try {
+      res = eval("(" + data + ")");
+      if ((ref = $.type(res)) === 'object' || ref === 'array') {
+        return res;
+      }
+      return data;
+    } catch (error) {
+      err = error;
+      return data;
+    }
+  };
+
+  $.parseSafe = _.escape;
+
+  $.parseTemp = function(string, object) {
+    var k, s, v;
+    s = string;
+    for (k in object) {
+      v = object[k];
+      s = s.replace(new RegExp('\\[' + k + '\\]', 'g'), v);
+    }
+    return s;
+  };
+
+  $.next = function() {
+    var args, callback, delay, ref;
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    ref = (function() {
+      switch (args.length) {
+        case 1:
+          return [0, args[0]];
+        default:
+          return args;
+      }
+    })(), delay = ref[0], callback = ref[1];
+    if (!delay) {
+      process.nextTick(callback);
+      return;
+    }
+    return setTimeout(callback, delay);
+  };
+
+  $.log = console.log;
+
+  $.info = function() {
+    var a, args, arr, cache, date, method, msg, ref, short, type;
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    ref = (function() {
+      switch (args.length) {
+        case 1:
+          return ['log', 'default', args[0]];
+        case 2:
+          return ['log', args[0], args[1]];
+        default:
+          return args;
+      }
+    })(), method = ref[0], type = ref[1], msg = ref[2];
+    cache = $.info['__cache__'];
+    short = _.floor(_.now(), -3);
+    if (cache[0] !== short) {
+      cache[0] = short;
+      date = new Date();
+      cache[1] = ((function() {
+        var j, len, ref1, results;
+        ref1 = [date.getHours(), date.getMinutes(), date.getSeconds()];
+        results = [];
+        for (j = 0, len = ref1.length; j < len; j++) {
+          a = ref1[j];
+          results.push(_.padStart(a, 2, 0));
+        }
+        return results;
+      })()).join(':');
+    }
+    arr = ["[" + cache[1] + "]"];
+    if (type !== 'default') {
+      arr.push("<" + (type.toUpperCase()) + ">");
+    }
+    arr.push(msg);
+    console[method](arr.join(' '));
+    return msg;
+  };
+
+  $.info['__cache__'] = [];
+
+  $.i = function(msg) {
+    $.log(msg);
+    return msg;
+  };
+
+  $.timeStamp = function(arg) {
+    var a, arr, b, date, str, type;
+    type = $.type(arg);
+    if (type === 'number') {
+      return _.floor(arg, -3);
+    }
+    if (type !== 'string') {
+      return _.floor(_.now(), -3);
+    }
+    str = _.trim(arg).replace(/\s+/g, ' ').replace(/[-|\/]/g, '.');
+    date = new Date();
+    arr = str.split(' ');
+    b = arr[0].split('.');
+    date.setFullYear(b[0], b[1] - 1, b[2]);
+    if (!(a = arr[1])) {
+      date.setHours(0, 0, 0, 0);
+    } else {
+      a = a.split(':');
+      date.setHours(a[0], a[1], a[2] || 0, 0);
+    }
+    return date.getTime();
+  };
+
+  $.shell = function(cmd, callback) {
+    var child, fn;
+    fn = $.shell;
+    fn.platform || (fn.platform = (require('os')).platform());
+    fn.exec || (fn.exec = (require('child_process')).exec);
+    fn.info || (fn.info = function(string) {
+      var text;
+      text = $.trim(string);
+      if (!text.length) {
+        return;
+      }
+      return $.log(text.replace(/\r/g, '\n').replace(/\n{2,}/g, ''));
+    });
+    if ($.type(cmd) === 'array') {
+      cmd = fn.platform === 'win32' ? cmd.join('&') : cmd.join('&&');
+    }
+    $.info('shell', cmd);
+    child = fn.exec(cmd);
+    child.stdout.on('data', function(data) {
+      return fn.info(data);
+    });
+    child.stderr.on('data', function(data) {
+      return fn.info(data);
+    });
+    return child.on('close', function() {
+      return typeof callback === "function" ? callback() : void 0;
+    });
+  };
+
+}).call(this);
