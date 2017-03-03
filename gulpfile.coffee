@@ -13,6 +13,12 @@ $$.task 'watch', ->
     './source/include/**/*.coffee'
   ], deb
 
+  $test = './test/test.coffee'
+  deb = _.debounce ->
+    $$.compile $test, minify: false
+  , 1e3
+  $$.watch $test, deb
+
 $$.task 'build', co ->
   yield $$.delete [
     './index.js'
@@ -27,6 +33,9 @@ $$.task 'prepare', co ->
   yield $$.delete './coffeelint.json'
   yield $$.compile './coffeelint.yml'
 
+  yield $$.delete './test/test.js'
+  yield $$.compile './test/test.coffee', minify: false
+
 $$.task 'set', co ->
 
   if !(ver = $$.argv.version) then return
@@ -36,14 +45,6 @@ $$.task 'set', co ->
 
   yield $$.replace './source/include/init.coffee'
   , /version: '[\d.]+'/, "version: '#{ver}'"
-
-  yield $$.replace './test.coffee'
-  , /version = '[\d.]+'/, "version = '#{ver}'"
-
-$$.task 'test', co ->
-  yield $$.compile './test.coffee', minify: false
-  yield $$.shell 'node test'
-  yield $$.delete './test.js'
 
 $$.task 'init', co ->
 
