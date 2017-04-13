@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "mocha": "^3.2.0"
   },
   "dependencies": {
+    "colors": "^1.1.2",
     "node-jquery-lite": "^0.4.1"
   }
 }

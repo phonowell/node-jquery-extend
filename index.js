@@ -1,8 +1,10 @@
 (function() {
-  var $, _,
+  var $, _, colors,
     slice = [].slice;
 
   $ = require('node-jquery-lite');
+
+  colors = require('colors/safe');
 
   _ = $._;
 
@@ -97,7 +99,7 @@
   $.log = console.log;
 
   $.info = function() {
-    var a, args, arr, cache, date, method, msg, ref, short, type;
+    var a, args, arr, cache, date, message, method, msg, ref, short, type;
     args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     ref = (function() {
       switch (args.length) {
@@ -130,7 +132,21 @@
       arr.push("<" + (type.toUpperCase()) + ">");
     }
     arr.push(msg);
-    console[method](arr.join(' '));
+    message = arr.join(' ');
+    message = message.replace(/\[.*?]/g, function(text) {
+      var cont;
+      cont = text.replace(/\[|]/g, '');
+      return "[" + (colors.gray(cont)) + "]";
+    }).replace(/<.*?>/g, function(text) {
+      var cont;
+      cont = text.replace(/<|>/g, '');
+      return "" + (colors.gray('<')) + (colors.cyan(cont)) + (colors.gray('>'));
+    }).replace(/'.*?'/g, function(text) {
+      var cont;
+      cont = text.replace(/'/g, '');
+      return colors.magenta(cont);
+    });
+    console[method](message);
     return msg;
   };
 

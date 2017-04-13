@@ -32,7 +32,22 @@ $.info = (args...) ->
   if type != 'default' then arr.push "<#{type.toUpperCase()}>"
   arr.push msg
 
-  console[method] arr.join ' ' # log
+  message = arr.join ' '
+  message = message
+  # [xxx]
+  .replace /\[.*?]/g, (text) ->
+    cont = text.replace /\[|]/g, ''
+    "[#{colors.gray cont}]"
+  # <xxx>
+  .replace /<.*?>/g, (text) ->
+    cont = text.replace /<|>/g, ''
+    "#{colors.gray '<'}#{colors.cyan cont}#{colors.gray '>'}"
+  # 'xxx'
+  .replace /'.*?'/g, (text) ->
+    cont = text.replace /'/g, ''
+    colors.magenta cont
+
+  console[method] message
 
   msg
 

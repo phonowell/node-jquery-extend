@@ -1,5 +1,10 @@
 # UPDATES
 
+### v0.0.4 @ 4.13.2017
+
+- Required [colors.js](https://github.com/Marak/colors.js) now.
+- Updated `$.info()`.
+
 ### v0.0.3 @ 12.28.2016
 
 - Updated `$.info()`.

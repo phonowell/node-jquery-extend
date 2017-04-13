@@ -1,4 +1,6 @@
 $ = require 'node-jquery-lite'
-_ = $._
+colors = require 'colors/safe'
+
+{_} = $
 
 module.exports = $
