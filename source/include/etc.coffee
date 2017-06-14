@@ -19,6 +19,8 @@ $.info = (args...) ->
     when 2 then ['log', args[0], args[1]]
     else args
 
+  if $.info.isSilent then return msg
+
   # time string
   cache = $.info['__cache__']
   short = _.floor _.now(), -3

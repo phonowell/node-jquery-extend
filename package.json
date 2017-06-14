@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {

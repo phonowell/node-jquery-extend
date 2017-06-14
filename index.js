@@ -111,6 +111,9 @@
           return args;
       }
     })(), method = ref[0], type = ref[1], msg = ref[2];
+    if ($.info.isSilent) {
+      return msg;
+    }
     cache = $.info['__cache__'];
     short = _.floor(_.now(), -3);
     if (cache[0] !== short) {
