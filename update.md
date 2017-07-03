@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.7 @ 7.3.2017
+- Updated `$.get()`.
+- Updated `$.post()`.
+
 ### v0.0.6 @ 7.3.2017
 - Added `$.get()`.
 - Added `$.post`.

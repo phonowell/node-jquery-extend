@@ -12,7 +12,9 @@
 
 ###
 
-$.get = axios.get
+$.get = co (url, data) ->
+  res = yield axios.get url, params: data or {}
+  res.data
 
 $.i = (msg) ->
   $.log msg
@@ -76,7 +78,9 @@ $.next = (arg...) ->
 
   setTimeout callback, delay
 
-$.post = axios.post
+$.post = co (url, data) ->
+  res = yield axios.post url, qs.stringify data
+  res.data
 
 $.serialize = (string) ->
   switch $.type string

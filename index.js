@@ -1,5 +1,5 @@
 (function() {
-  var $, _, axios, colors,
+  var $, _, axios, colors, qs,
     slice = [].slice;
 
   $ = require('node-jquery-lite');
@@ -7,6 +7,8 @@
   colors = require('colors/safe');
 
   axios = require('axios');
+
+  qs = require('qs');
 
   _ = $._;
 
@@ -90,7 +92,13 @@
     $.timeStamp(arg)
    */
 
-  $.get = axios.get;
+  $.get = co(function*(url, data) {
+    var res;
+    res = (yield axios.get(url, {
+      params: data || {}
+    }));
+    return res.data;
+  });
 
   $.i = function(msg) {
     $.log(msg);
@@ -174,7 +182,11 @@
     return setTimeout(callback, delay);
   };
 
-  $.post = axios.post;
+  $.post = co(function*(url, data) {
+    var res;
+    res = (yield axios.post(url, qs.stringify(data)));
+    return res.data;
+  });
 
   $.serialize = function(string) {
     var a, b, j, key, len, ref, ref1, res, value;
