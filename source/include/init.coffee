@@ -1,9 +1,18 @@
+# require
+
 $ = require 'node-jquery-lite'
-colors = require 'colors/safe'
+
 axios = require 'axios'
 qs = require 'qs'
 
+Promise = require 'bluebird'
+co = Promise.coroutine
+
+colors = require 'colors/safe'
+
+# lodash
 
 {_} = $
 
+# return
 module.exports = $

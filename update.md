@@ -1,5 +1,8 @@
 # UPDATES
 
+### v0.0.8 @ 7.3.2017
+- Required [bluebird](https://github.com/petkaantonov/bluebird) now.
+
 ### v0.0.7 @ 7.3.2017
 - Updated `$.get()`.
 - Updated `$.post()`.
