@@ -1,5 +1,24 @@
-$.parseShortDate = (param) ->
-  date = if $.type(param) == 'date' then param else new Date param
+###
+
+  $.parseJson()
+  $.parsePts(num)
+  $.parseSafe()
+  $.parseShortDate(option)
+  $.parseString(data)
+  $.parseTemp(string, data)
+
+###
+
+$.parseJson = $.parseJSON
+
+$.parsePts = (num) ->
+  if (n = (num or 0) | 0) >= 1e5 then (((n * 0.001) | 0) / 10) + '万'
+  else n.toString().replace /(\d)(?=(\d{3})+(?!\d))/g, '$1,'
+
+$.parseSafe = _.escape
+
+$.parseShortDate = (option) ->
+  date = if $.type(option) == 'date' then option else new Date option
   arr = [
     date.getFullYear()
     1 + date.getMonth()
@@ -21,23 +40,8 @@ $.parseString = (data) ->
     when 'object'then JSON.stringify d
     else String d
 
-$.parsePts = (number) ->
-  if (n = (number or 0) | 0) >= 1e5 then (((n * 0.001) | 0) / 10) + '万'
-  else n.toString().replace /(\d)(?=(\d{3})+(?!\d))/g, '$1,'
-
-$.parseJson = $.parseJSON = (data) ->
-  if $.type(data) != 'string' then return data
-
-  try
-    res = eval "(#{data})"
-    if $.type(res) in ['object', 'array'] then return res
-    data
-  catch err then data
-
-$.parseSafe = _.escape
-
-$.parseTemp = (string, object) ->
+$.parseTemp = (string, data) ->
   s = string
-  for k, v of object
+  for k, v of data
     s = s.replace (new RegExp '\\[' + k + '\\]', 'g'), v
   s

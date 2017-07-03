@@ -4,33 +4,46 @@ co = Promise.coroutine
 
 # task
 
-$$.task 'work', -> $$.shell 'start gulp watch'
+###
 
-$$.task 'watch', ->
+  build
+  init
+  lint
+  prepare
+  set
+  test
+  update
+  watch
+  work
 
-  deb = _.debounce $$.task('build'), 1e3
-  $$.watch [
-    './source/index.coffee'
-    './source/include/**/*.coffee'
-  ], deb
-
-  $test = './test/test.coffee'
-  deb = _.debounce ->
-    $$.compile $test,
-      map: true
-      minify: false
-  , 1e3
-  $$.watch $test, deb
+###
 
 $$.task 'build', co ->
+
   yield $$.remove [
     './index.js'
     './source/index.js'
   ]
-  yield $$.compile './source/index.coffee', minify: false
-  yield $$.copy './source/index.js'
 
-$$.task 'lint', co -> yield $$.lint 'coffee'
+  yield $$.compile './source/index.coffee', minify: false
+  yield $$.copy './source/index.js', './'
+
+$$.task 'init', co ->
+
+  yield $$.remove './.gitignore'
+  yield $$.copy './../kokoro/.gitignore'
+
+  yield $$.remove './.npmignore'
+  yield $$.copy './../kokoro/.npmignore'
+
+  yield $$.remove './coffeelint.yml'
+  yield $$.copy './../kokoro/coffeelint.yml'
+
+$$.task 'lint', co ->
+  yield $$.lint [
+    './gulpfile.coffee'
+    './source/**/*.coffee'
+  ]
 
 $$.task 'prepare', co ->
   yield $$.remove './coffeelint.json'
@@ -46,16 +59,48 @@ $$.task 'set', co ->
   yield $$.replace './package.json'
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
 
-  yield $$.replace './source/include/init.coffee'
-  , /version: '[\d.]+'/, "version: '#{ver}'"
+$$.task 'test', co ->
+  yield $$.compile './test/**/*.coffee'
+  $$.shell 'start npm test'
 
-$$.task 'init', co ->
+$$.task 'update', co ->
 
-  yield $$.remove './.gitignore'
-  yield $$.copy './../kokoro/.gitignore'
+  pkg = './package.json'
+  yield $$.backup pkg
 
-  yield $$.remove './.npmignore'
-  yield $$.copy './../kokoro/.npmignore'
+  p = require pkg
+  list = []
 
-  yield $$.remove './coffeelint.yml'
-  yield $$.copy './../kokoro/coffeelint.yml'
+  for key of p.devDependencies
+    list.push "cnpm r --save-dev #{key}"
+    list.push "cnpm i --save-dev #{key}"
+
+  for key of p.dependencies
+    list.push "cnpm r --save #{key}"
+    list.push "cnpm i --save #{key}"
+
+  yield $$.shell list
+
+  yield $$.remove "#{pkg}.bak"
+
+$$.task 'watch', ->
+
+  # build
+
+  deb = _.debounce $$.task('build'), 1e3
+  $$.watch [
+    './source/index.coffee'
+    './source/include/**/*.coffee'
+  ], deb
+
+  # test
+
+  $test = './test/test.coffee'
+  deb = _.debounce ->
+    $$.compile $test,
+      map: true
+      minify: false
+  , 1e3
+  $$.watch $test, deb
+
+$$.task 'work', -> $$.shell 'start gulp watch'

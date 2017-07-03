@@ -1,18 +1,44 @@
 (function() {
-  var $, _, colors,
+  var $, _, axios, colors,
     slice = [].slice;
 
   $ = require('node-jquery-lite');
 
   colors = require('colors/safe');
 
+  axios = require('axios');
+
   _ = $._;
 
   module.exports = $;
 
-  $.parseShortDate = function(param) {
+
+  /*
+  
+    $.parseJson()
+    $.parsePts(num)
+    $.parseSafe()
+    $.parseShortDate(option)
+    $.parseString(data)
+    $.parseTemp(string, data)
+   */
+
+  $.parseJson = $.parseJSON;
+
+  $.parsePts = function(num) {
+    var n;
+    if ((n = (num || 0) | 0) >= 1e5) {
+      return (((n * 0.001) | 0) / 10) + '万';
+    } else {
+      return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    }
+  };
+
+  $.parseSafe = _.escape;
+
+  $.parseShortDate = function(option) {
     var a, arr, date, i, j, len;
-    date = $.type(param) === 'date' ? param : new Date(param);
+    date = $.type(option) === 'date' ? option : new Date(option);
     arr = [date.getFullYear(), 1 + date.getMonth(), date.getDate()];
     for (i = j = 0, len = arr.length; j < len; i = ++j) {
       a = arr[i];
@@ -40,75 +66,48 @@
     }
   };
 
-  $.parsePts = function(number) {
-    var n;
-    if ((n = (number || 0) | 0) >= 1e5) {
-      return (((n * 0.001) | 0) / 10) + '万';
-    } else {
-      return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-    }
-  };
-
-  $.parseJson = $.parseJSON = function(data) {
-    var err, ref, res;
-    if ($.type(data) !== 'string') {
-      return data;
-    }
-    try {
-      res = eval("(" + data + ")");
-      if ((ref = $.type(res)) === 'object' || ref === 'array') {
-        return res;
-      }
-      return data;
-    } catch (error) {
-      err = error;
-      return data;
-    }
-  };
-
-  $.parseSafe = _.escape;
-
-  $.parseTemp = function(string, object) {
+  $.parseTemp = function(string, data) {
     var k, s, v;
     s = string;
-    for (k in object) {
-      v = object[k];
+    for (k in data) {
+      v = data[k];
       s = s.replace(new RegExp('\\[' + k + '\\]', 'g'), v);
     }
     return s;
   };
 
-  $.next = function() {
-    var args, callback, delay, ref;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    ref = (function() {
-      switch (args.length) {
-        case 1:
-          return [0, args[0]];
-        default:
-          return args;
-      }
-    })(), delay = ref[0], callback = ref[1];
-    if (!delay) {
-      process.nextTick(callback);
-      return;
-    }
-    return setTimeout(callback, delay);
+
+  /*
+  
+    $.get()
+    $.i(msg)
+    $.info(arg)
+    $.log()
+    $.next(arg)
+    $.post()
+    $.serialize(string)
+    $.shell(cmd, callback)
+    $.timeStamp(arg)
+   */
+
+  $.get = axios.get;
+
+  $.i = function(msg) {
+    $.log(msg);
+    return msg;
   };
 
-  $.log = console.log;
-
   $.info = function() {
-    var a, args, arr, cache, date, message, method, msg, ref, short, type;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    var a, arg, arr, cache, date, message, method, msg, ref, short, type;
+    arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     ref = (function() {
-      switch (args.length) {
+      switch (arg.length) {
         case 1:
-          return ['log', 'default', args[0]];
+          return ['log', 'default', arg[0]];
         case 2:
-          return ['log', args[0], args[1]];
+          return ['log', arg[0], arg[1]];
         default:
-          return args;
+          return arg;
       }
     })(), method = ref[0], type = ref[1], msg = ref[2];
     if ($.info.isSilent) {
@@ -155,32 +154,51 @@
 
   $.info['__cache__'] = [];
 
-  $.i = function(msg) {
-    $.log(msg);
-    return msg;
+  $.log = console.log;
+
+  $.next = function() {
+    var arg, callback, delay, ref;
+    arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    ref = (function() {
+      switch (arg.length) {
+        case 1:
+          return [0, arg[0]];
+        default:
+          return arg;
+      }
+    })(), delay = ref[0], callback = ref[1];
+    if (!delay) {
+      process.nextTick(callback);
+      return;
+    }
+    return setTimeout(callback, delay);
   };
 
-  $.timeStamp = function(arg) {
-    var a, arr, b, date, str, type;
-    type = $.type(arg);
-    if (type === 'number') {
-      return _.floor(arg, -3);
+  $.post = axios.post;
+
+  $.serialize = function(string) {
+    var a, b, j, key, len, ref, ref1, res, value;
+    switch ($.type(string)) {
+      case 'object':
+        return string;
+      case 'string':
+        if (!~string.search(/=/)) {
+          return {};
+        }
+        res = {};
+        ref = _.trim(string.replace(/\?/g, '')).split('&');
+        for (j = 0, len = ref.length; j < len; j++) {
+          a = ref[j];
+          b = a.split('=');
+          ref1 = [_.trim(b[0]), _.trim(b[1])], key = ref1[0], value = ref1[1];
+          if (key.length) {
+            res[key] = value;
+          }
+        }
+        return res;
+      default:
+        return {};
     }
-    if (type !== 'string') {
-      return _.floor(_.now(), -3);
-    }
-    str = _.trim(arg).replace(/\s+/g, ' ').replace(/[-|\/]/g, '.');
-    date = new Date();
-    arr = str.split(' ');
-    b = arr[0].split('.');
-    date.setFullYear(b[0], b[1] - 1, b[2]);
-    if (!(a = arr[1])) {
-      date.setHours(0, 0, 0, 0);
-    } else {
-      a = a.split(':');
-      date.setHours(a[0], a[1], a[2] || 0, 0);
-    }
-    return date.getTime();
   };
 
   $.shell = function(cmd, callback) {
@@ -210,6 +228,29 @@
     return child.on('close', function() {
       return typeof callback === "function" ? callback() : void 0;
     });
+  };
+
+  $.timeStamp = function(arg) {
+    var a, arr, b, date, str, type;
+    type = $.type(arg);
+    if (type === 'number') {
+      return _.floor(arg, -3);
+    }
+    if (type !== 'string') {
+      return _.floor(_.now(), -3);
+    }
+    str = _.trim(arg).replace(/\s+/g, ' ').replace(/[-|\/]/g, '.');
+    date = new Date();
+    arr = str.split(' ');
+    b = arr[0].split('.');
+    date.setFullYear(b[0], b[1] - 1, b[2]);
+    if (!(a = arr[1])) {
+      date.setHours(0, 0, 0, 0);
+    } else {
+      a = a.split(':');
+      date.setHours(a[0], a[1], a[2] || 0, 0);
+    }
+    return date.getTime();
   };
 
 }).call(this);

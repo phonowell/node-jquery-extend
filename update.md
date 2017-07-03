@@ -1,5 +1,11 @@
 # UPDATES
 
+### v0.0.6 @ 7.3.2017
+- Added `$.get()`.
+- Added `$.post`.
+- Added `$.serialize()`.
+- Removed `$.parseJSON()`.
+
 ### v0.0.5 @ 6.14.2017
 - Updated `$.info()`.
 

@@ -32,19 +32,6 @@ describe '$.log()', ->
 
 # $.next()
 
-describe '$.parseJson()', ->
-
-  _.each $SUBJECT, (a, i) ->
-    p = $SUBJECT[i]
-    type = $.type p
-
-    if type == 'number' and _.isNaN p
-      # NaN
-      it 'NaN', -> check _.isEqual($.parseJson(p), a), true
-      return
-
-    it type, -> checkDeep $.parseJson(p), a
-
 describe '$.parsePts()', ->
   LIST = [
     [0, '0']
@@ -98,6 +85,39 @@ describe '$.parseTemp()', ->
       b: 'Madoka'
     res = $.parseTemp temp, arg
     check res, 'Homura is falling love with Madoka!'
+
+describe '$.serialize()', ->
+
+  LIST = [
+    {}
+    {}
+    {}
+    {}
+    {a: 1, b: 2}
+    {}
+    {}
+    {}
+    {}
+    {}
+    {}
+    {}
+  ]
+  _.each LIST, (a, i) ->
+    p = $SUBJECT[i]
+    type = $.type p
+    if type == 'number' and _.isNaN p then type = 'NaN'
+
+    it type, -> checkDeep $.serialize(p), a
+
+  it 'params', ->
+    a = '?a=1&b=2&c=3&d=4'
+    b =
+      a: '1'
+      b: '2'
+      c: '3'
+      d: '4'
+
+    checkDeep $.serialize(a), b
 
 # $.shell()
 

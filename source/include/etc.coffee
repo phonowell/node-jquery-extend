@@ -1,23 +1,29 @@
-$.next = (args...) ->
+###
 
-  [delay, callback] = switch args.length
-    when 1 then [0, args[0]]
-    else args
+  $.get()
+  $.i(msg)
+  $.info(arg)
+  $.log()
+  $.next(arg)
+  $.post()
+  $.serialize(string)
+  $.shell(cmd, callback)
+  $.timeStamp(arg)
 
-  if !delay
-    process.nextTick callback
-    return
+###
 
-  setTimeout callback, delay
+$.get = axios.get
 
-$.log = console.log
+$.i = (msg) ->
+  $.log msg
+  msg
 
-$.info = (args...) ->
+$.info = (arg...) ->
 
-  [method, type, msg] = switch args.length
-    when 1 then ['log', 'default', args[0]]
-    when 2 then ['log', args[0], args[1]]
-    else args
+  [method, type, msg] = switch arg.length
+    when 1 then ['log', 'default', arg[0]]
+    when 2 then ['log', arg[0], arg[1]]
+    else arg
 
   if $.info.isSilent then return msg
 
@@ -51,13 +57,58 @@ $.info = (args...) ->
 
   console[method] message
 
+  # return
   msg
 
 $.info['__cache__'] = []
 
-$.i = (msg) ->
-  $.log msg
-  msg
+$.log = console.log
+
+$.next = (arg...) ->
+
+  [delay, callback] = switch arg.length
+    when 1 then [0, arg[0]]
+    else arg
+
+  if !delay
+    process.nextTick callback
+    return
+
+  setTimeout callback, delay
+
+$.post = axios.post
+
+$.serialize = (string) ->
+  switch $.type string
+    when 'object' then string
+    when 'string'
+      if !~string.search /=/ then return {}
+      res = {}
+      for a in _.trim(string.replace /\?/g, '').split '&'
+        b = a.split '='
+        [key, value] = [_.trim(b[0]), _.trim b[1]]
+        if key.length then res[key] = value
+      res
+    else {}
+
+$.shell = (cmd, callback) ->
+  fn = $.shell
+  fn.platform or= (require 'os').platform()
+  fn.exec or= (require 'child_process').exec
+  fn.info or= (string) ->
+    text = $.trim string
+    if !text.length then return
+    $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
+
+  if $.type(cmd) == 'array'
+    cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
+  $.info 'shell', cmd
+
+  # execute
+  child = fn.exec cmd
+  child.stdout.on 'data', (data) -> fn.info data
+  child.stderr.on 'data', (data) -> fn.info data
+  child.on 'close', -> callback?()
 
 $.timeStamp = (arg) ->
 
@@ -85,22 +136,3 @@ $.timeStamp = (arg) ->
     date.setHours a[0], a[1], a[2] or 0, 0
 
   date.getTime()
-
-$.shell = (cmd, callback) ->
-  fn = $.shell
-  fn.platform or= (require 'os').platform()
-  fn.exec or= (require 'child_process').exec
-  fn.info or= (string) ->
-    text = $.trim string
-    if !text.length then return
-    $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
-
-  if $.type(cmd) == 'array'
-    cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
-  $.info 'shell', cmd
-
-  # execute
-  child = fn.exec cmd
-  child.stdout.on 'data', (data) -> fn.info data
-  child.stderr.on 'data', (data) -> fn.info data
-  child.on 'close', -> callback?()
