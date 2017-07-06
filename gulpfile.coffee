@@ -7,12 +7,10 @@ co = Promise.coroutine
 ###
 
   build
-  init
   lint
   prepare
   set
   test
-  update
   watch
   work
 
@@ -25,21 +23,14 @@ $$.task 'build', co ->
     './source/index.js'
   ]
 
-  yield $$.compile './source/index.coffee', minify: false
+  yield $$.compile './source/index.coffee',
+    minify: false
   yield $$.copy './source/index.js', './'
 
-$$.task 'init', co ->
-
-  yield $$.remove './.gitignore'
-  yield $$.copy './../kokoro/.gitignore'
-
-  yield $$.remove './.npmignore'
-  yield $$.copy './../kokoro/.npmignore'
-
-  yield $$.remove './coffeelint.yml'
-  yield $$.copy './../kokoro/coffeelint.yml'
-
 $$.task 'lint', co ->
+
+  yield $$.task('kokoro')()
+
   yield $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
@@ -50,7 +41,8 @@ $$.task 'prepare', co ->
   yield $$.compile './coffeelint.yml'
 
   yield $$.remove './test/test.js'
-  yield $$.compile './test/test.coffee', minify: false
+  yield $$.compile './test/test.coffee',
+    minify: false
 
 $$.task 'set', co ->
 
@@ -62,26 +54,6 @@ $$.task 'set', co ->
 $$.task 'test', co ->
   yield $$.compile './test/**/*.coffee'
   $$.shell 'start npm test'
-
-$$.task 'update', co ->
-
-  pkg = './package.json'
-  yield $$.backup pkg
-
-  p = require pkg
-  list = []
-
-  for key of p.devDependencies
-    list.push "cnpm r --save-dev #{key}"
-    list.push "cnpm i --save-dev #{key}"
-
-  for key of p.dependencies
-    list.push "cnpm r --save #{key}"
-    list.push "cnpm i --save #{key}"
-
-  yield $$.shell list
-
-  yield $$.remove "#{pkg}.bak"
 
 $$.task 'watch', ->
 

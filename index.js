@@ -18,6 +18,57 @@
 
   module.exports = $;
 
+  (function() {
+    var fn;
+    fn = function(cmd, callback) {
+      return new Promise(function(resolve) {
+        var child;
+        cmd = (function() {
+          switch ($.type(cmd)) {
+            case 'array':
+              return cmd.join(" " + fn.separator + " ");
+            case 'string':
+              return cmd;
+            default:
+              throw new Error('invalid argument type');
+          }
+        })();
+        $.info('shell', cmd);
+        child = fn.exec(cmd);
+        child.stdout.on('data', function(data) {
+          return fn.info(data);
+        });
+        child.stderr.on('data', function(data) {
+          return fn.info(data);
+        });
+        return child.on('close', function() {
+          resolve();
+          return typeof callback === "function" ? callback() : void 0;
+        });
+      });
+    };
+    fn.separator = (function() {
+      var platform;
+      platform = (require('os')).platform();
+      switch (platform) {
+        case 'win32':
+          return '&';
+        default:
+          return '&&';
+      }
+    })();
+    fn.exec = (require('child_process')).exec;
+    fn.info = function(string) {
+      string = $.trim(string);
+      if (!string.length) {
+        return;
+      }
+      string = string.replace(/\r/g, '\n').replace(/\n{2,}/g, '');
+      return $.log(string);
+    };
+    return $.shell = fn;
+  })();
+
 
   /*
   
@@ -215,35 +266,6 @@
       default:
         return {};
     }
-  };
-
-  $.shell = function(cmd, callback) {
-    var child, fn;
-    fn = $.shell;
-    fn.platform || (fn.platform = (require('os')).platform());
-    fn.exec || (fn.exec = (require('child_process')).exec);
-    fn.info || (fn.info = function(string) {
-      var text;
-      text = $.trim(string);
-      if (!text.length) {
-        return;
-      }
-      return $.log(text.replace(/\r/g, '\n').replace(/\n{2,}/g, ''));
-    });
-    if ($.type(cmd) === 'array') {
-      cmd = fn.platform === 'win32' ? cmd.join('&') : cmd.join('&&');
-    }
-    $.info('shell', cmd);
-    child = fn.exec(cmd);
-    child.stdout.on('data', function(data) {
-      return fn.info(data);
-    });
-    child.stderr.on('data', function(data) {
-      return fn.info(data);
-    });
-    return child.on('close', function() {
-      return typeof callback === "function" ? callback() : void 0;
-    });
   };
 
   $.timeStamp = function(arg) {

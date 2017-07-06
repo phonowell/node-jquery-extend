@@ -1,5 +1,10 @@
 # UPDATES
 
+### v0.0.9 @ 7.6.2017
+
+- Rewrote `$.shell()`.
+- Updated *gulp* files.
+
 ### v0.0.8 @ 7.3.2017
 - Required [bluebird](https://github.com/petkaantonov/bluebird) now.
 
