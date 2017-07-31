@@ -37,8 +37,6 @@ $$.task 'lint', co ->
   ]
 
 $$.task 'prepare', co ->
-  yield $$.remove './coffeelint.json'
-  yield $$.compile './coffeelint.yml'
 
   yield $$.remove './test/test.js'
   yield $$.compile './test/test.coffee',
