@@ -18,20 +18,32 @@ do ->
         resolve()
         callback?()
 
+  ###
+
+    exec
+    separator
+
+    info(string)
+
+  ###
+
+  fn.exec = (require 'child_process').exec
+
   fn.separator = do ->
     platform = (require 'os').platform()
     switch platform
       when 'win32' then '&'
       else '&&'
 
-  fn.exec = (require 'child_process').exec
-
   fn.info = (string) ->
+
     string = $.trim string
     if !string.length then return
+
     string = string
-      .replace /\r/g, '\n'
-      .replace /\n{2,}/g, ''
+    .replace /\r/g, '\n'
+    .replace /\n{2,}/g, ''
+
     $.log string
 
   # return

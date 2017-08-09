@@ -1,5 +1,10 @@
 # UPDATES
 
+### v0.0.11 @ 8.9.2017
+
+- Rewrote `$.info()`.
+- Rewrote `$.shell()`.
+
 ### v0.0.9 @ 7.6.2017
 
 - Rewrote `$.shell()`.

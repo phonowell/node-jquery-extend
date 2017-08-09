@@ -18,56 +18,107 @@
 
   module.exports = $;
 
+
+  /*
+  
+    $.i(msg)
+    $.info([method], [type], msg)
+    $.log()
+   */
+
+  $.i = function(msg) {
+    $.log(msg);
+    return msg;
+  };
+
   (function() {
     var fn;
-    fn = function(cmd, callback) {
-      return new Promise(function(resolve) {
-        var child;
-        cmd = (function() {
-          switch ($.type(cmd)) {
-            case 'array':
-              return cmd.join(" " + fn.separator + " ");
-            case 'string':
-              return cmd;
-            default:
-              throw new Error('invalid argument type');
-          }
-        })();
-        $.info('shell', cmd);
-        child = fn.exec(cmd);
-        child.stdout.on('data', function(data) {
-          return fn.info(data);
-        });
-        child.stderr.on('data', function(data) {
-          return fn.info(data);
-        });
-        return child.on('close', function() {
-          resolve();
-          return typeof callback === "function" ? callback() : void 0;
-        });
+    fn = function() {
+      var arg, list, method, msg, ref, type;
+      arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      ref = (function() {
+        switch (arg.length) {
+          case 1:
+            return ['log', 'default', arg[0]];
+          case 2:
+            return ['log', arg[0], arg[1]];
+          case 3:
+            return arg;
+          default:
+            throw new Error('invalid argument length');
+        }
+      })(), method = ref[0], type = ref[1], msg = ref[2];
+      if (fn.isSilent) {
+        return msg;
+      }
+      list = ["[" + (fn.getTimeString()) + "]"];
+      if (type !== 'default') {
+        list.push("<" + (type.toUpperCase()) + ">");
+      }
+      list.push(fn.renderPath(msg));
+      console[method](fn.renderColor(list.join(' ')));
+      return msg;
+    };
+
+    /*
+    
+      __cache__
+      __reg_base__
+      __reg_home__
+    
+      getTimeString()
+      renderColor(msg)
+      renderPath(msg)
+     */
+    fn['__cache__'] = [];
+    fn['__reg_base__'] = new RegExp(process.cwd());
+    fn['__reg_home__'] = new RegExp((require('os')).homedir());
+    fn.getTimeString = function() {
+      var a, cache, date, list, ts;
+      cache = fn['__cache__'];
+      ts = _.floor(_.now(), -3);
+      if (ts === cache[0]) {
+        return cache[1];
+      }
+      date = new Date();
+      list = [date.getHours(), date.getMinutes(), date.getSeconds()];
+      cache[0] = ts;
+      return cache[1] = ((function() {
+        var j, len, results;
+        results = [];
+        for (j = 0, len = list.length; j < len; j++) {
+          a = list[j];
+          results.push(_.padStart(a, 2, 0));
+        }
+        return results;
+      })()).join(':');
+    };
+    fn.renderColor = function(msg) {
+      return msg.replace(/\[.*?]/g, function(text) {
+        var cont;
+        cont = text.replace(/\[|]/g, '');
+        return "[" + (colors.gray(cont)) + "]";
+      }).replace(/<.*?>/g, function(text) {
+        var cont;
+        cont = text.replace(/<|>/g, '');
+        return "" + (colors.gray('<')) + (colors.cyan(cont)) + (colors.gray('>'));
+      }).replace(/'.*?'/g, function(text) {
+        var cont;
+        cont = text.replace(/'/g, '');
+        return colors.magenta(cont);
       });
     };
-    fn.separator = (function() {
-      var platform;
-      platform = (require('os')).platform();
-      switch (platform) {
-        case 'win32':
-          return '&';
-        default:
-          return '&&';
+    fn.renderPath = function(msg) {
+      var ref;
+      if ((ref = msg[0]) === '.' || ref === '~') {
+        return msg;
       }
-    })();
-    fn.exec = (require('child_process')).exec;
-    fn.info = function(string) {
-      string = $.trim(string);
-      if (!string.length) {
-        return;
-      }
-      string = string.replace(/\r/g, '\n').replace(/\n{2,}/g, '');
-      return $.log(string);
+      return msg.replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
     };
-    return $.shell = fn;
+    return $.info = fn;
   })();
+
+  $.log = console.log;
 
 
   /*
@@ -133,18 +184,74 @@
     return s;
   };
 
+  (function() {
+    var fn;
+    fn = function(cmd, callback) {
+      return new Promise(function(resolve) {
+        var child;
+        cmd = (function() {
+          switch ($.type(cmd)) {
+            case 'array':
+              return cmd.join(" " + fn.separator + " ");
+            case 'string':
+              return cmd;
+            default:
+              throw new Error('invalid argument type');
+          }
+        })();
+        $.info('shell', cmd);
+        child = fn.exec(cmd);
+        child.stdout.on('data', function(data) {
+          return fn.info(data);
+        });
+        child.stderr.on('data', function(data) {
+          return fn.info(data);
+        });
+        return child.on('close', function() {
+          resolve();
+          return typeof callback === "function" ? callback() : void 0;
+        });
+      });
+    };
+
+    /*
+    
+      exec
+      separator
+    
+      info(string)
+     */
+    fn.exec = (require('child_process')).exec;
+    fn.separator = (function() {
+      var platform;
+      platform = (require('os')).platform();
+      switch (platform) {
+        case 'win32':
+          return '&';
+        default:
+          return '&&';
+      }
+    })();
+    fn.info = function(string) {
+      string = $.trim(string);
+      if (!string.length) {
+        return;
+      }
+      string = string.replace(/\r/g, '\n').replace(/\n{2,}/g, '');
+      return $.log(string);
+    };
+    return $.shell = fn;
+  })();
+
 
   /*
   
-    $.get()
-    $.i(msg)
-    $.info(arg)
-    $.log()
-    $.next(arg)
-    $.post()
+    $.get(url, [data])
+    $.next([delay], callback)
+    $.post(url, [data])
     $.serialize(string)
     $.shell(cmd, callback)
-    $.timeStamp(arg)
+    $.timeStamp([arg])
    */
 
   $.get = co(function*(url, data) {
@@ -155,70 +262,6 @@
     return res.data;
   });
 
-  $.i = function(msg) {
-    $.log(msg);
-    return msg;
-  };
-
-  $.info = function() {
-    var a, arg, arr, cache, date, message, method, msg, ref, short, type;
-    arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    ref = (function() {
-      switch (arg.length) {
-        case 1:
-          return ['log', 'default', arg[0]];
-        case 2:
-          return ['log', arg[0], arg[1]];
-        default:
-          return arg;
-      }
-    })(), method = ref[0], type = ref[1], msg = ref[2];
-    if ($.info.isSilent) {
-      return msg;
-    }
-    cache = $.info['__cache__'];
-    short = _.floor(_.now(), -3);
-    if (cache[0] !== short) {
-      cache[0] = short;
-      date = new Date();
-      cache[1] = ((function() {
-        var j, len, ref1, results;
-        ref1 = [date.getHours(), date.getMinutes(), date.getSeconds()];
-        results = [];
-        for (j = 0, len = ref1.length; j < len; j++) {
-          a = ref1[j];
-          results.push(_.padStart(a, 2, 0));
-        }
-        return results;
-      })()).join(':');
-    }
-    arr = ["[" + cache[1] + "]"];
-    if (type !== 'default') {
-      arr.push("<" + (type.toUpperCase()) + ">");
-    }
-    arr.push(msg);
-    message = arr.join(' ');
-    message = message.replace(/\[.*?]/g, function(text) {
-      var cont;
-      cont = text.replace(/\[|]/g, '');
-      return "[" + (colors.gray(cont)) + "]";
-    }).replace(/<.*?>/g, function(text) {
-      var cont;
-      cont = text.replace(/<|>/g, '');
-      return "" + (colors.gray('<')) + (colors.cyan(cont)) + (colors.gray('>'));
-    }).replace(/'.*?'/g, function(text) {
-      var cont;
-      cont = text.replace(/'/g, '');
-      return colors.magenta(cont);
-    });
-    console[method](message);
-    return msg;
-  };
-
-  $.info['__cache__'] = [];
-
-  $.log = console.log;
-
   $.next = function() {
     var arg, callback, delay, ref;
     arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
@@ -226,13 +269,14 @@
       switch (arg.length) {
         case 1:
           return [0, arg[0]];
-        default:
+        case 2:
           return arg;
+        default:
+          throw new Error('invalid argument length');
       }
     })(), delay = ref[0], callback = ref[1];
     if (!delay) {
-      process.nextTick(callback);
-      return;
+      return process.nextTick(callback);
     }
     return setTimeout(callback, delay);
   };
@@ -264,25 +308,29 @@
         }
         return res;
       default:
-        return {};
+        throw new Error('invalid argument type');
     }
   };
 
   $.timeStamp = function(arg) {
-    var a, arr, b, date, str, type;
-    type = $.type(arg);
-    if (type === 'number') {
-      return _.floor(arg, -3);
+    var a, b, date, list, string;
+    switch ($.type(arg)) {
+      case 'null':
+      case 'undefined':
+        return _.floor(_.now(), -3);
+      case 'number':
+        return _.floor(arg, -3);
+      case 'string':
+        break;
+      default:
+        throw new Error('invalid argument type');
     }
-    if (type !== 'string') {
-      return _.floor(_.now(), -3);
-    }
-    str = _.trim(arg).replace(/\s+/g, ' ').replace(/[-|\/]/g, '.');
+    string = _.trim(arg).replace(/\s+/g, ' ').replace(/[-|\/]/g, '.');
     date = new Date();
-    arr = str.split(' ');
-    b = arr[0].split('.');
+    list = string.split(' ');
+    b = list[0].split('.');
     date.setFullYear(b[0], b[1] - 1, b[2]);
-    if (!(a = arr[1])) {
+    if (!(a = list[1])) {
       date.setHours(0, 0, 0, 0);
     } else {
       a = a.split(':');

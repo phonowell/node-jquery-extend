@@ -12,26 +12,26 @@ $ npm i node-jquery-extend
 
 ```
 $ = require 'node-jquery-extend'
-$.i 'Hello world!'
+$.info 'Hello world!'
 ```
 
 ## Methods
 
-- `$.get()`
-- `$.i()`
-- `$.info()`
+- `$.get(url, [data])`
+- `$.i(msg)`
+- `$.info([method], [type], msg)`
 - `$.log()`
-- `$.next()`
+- `$.next([delay], callback)`
 - `$.parseJson()`
-- `$.parsePts()`
+- `$.parsePts(num)`
 - `$.parseSafe()`
-- `$.parseShortDate()`
-- `$.parseString()`
-- `$.parseTemp()`
-- `$.post()`
-- `$.shell()`
-- `$.serialize()`
-- `$.timeStamp()`
+- `$.parseShortDate(option)`
+- `$.parseString(data)`
+- `$.parseTemp(string, data)`
+- `$.post(url, [data])`
+- `$.shell(cmd, [callback])`
+- `$.serialize(string)`
+- `$.timeStamp([arg])`
     
 ## Attention
 
