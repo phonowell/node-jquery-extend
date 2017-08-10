@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.12 @ 8.10.2017
+
+- Rewrote `$.info()`.
+
 ### v0.0.11 @ 8.9.2017
 
 - Rewrote `$.info()`.

@@ -2,6 +2,8 @@ $$ = require 'fire-keeper'
 {_, Promise} = $$.library
 co = Promise.coroutine
 
+$ = require './index'
+
 # task
 
 ###
@@ -75,4 +77,4 @@ $$.task 'watch', ->
 
 $$.task 'work', -> $$.shell 'start gulp watch'
 
-#$$.task 'z', co ->
+#$$.task 'z', ->

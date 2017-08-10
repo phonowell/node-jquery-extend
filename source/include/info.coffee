@@ -45,9 +45,9 @@ do ->
 
   fn['__cache__'] = []
 
-  fn['__reg_base__'] = new RegExp process.cwd()
+  fn['__reg_base__'] = new RegExp process.cwd(), 'g'
 
-  fn['__reg_home__'] = new RegExp (require 'os').homedir()
+  fn['__reg_home__'] = new RegExp (require 'os').homedir(), 'g'
 
   fn.getTimeString = ->
 
@@ -84,10 +84,7 @@ do ->
 
   fn.renderPath = (msg) ->
 
-    if msg[0] in ['.', '~'] then return msg
-
-    msg
-    .replace fn['__reg_base__'], '.'
+    msg.replace fn['__reg_base__'], '.'
     .replace fn['__reg_home__'], '~'
 
   # return

@@ -71,8 +71,8 @@
       renderPath(msg)
      */
     fn['__cache__'] = [];
-    fn['__reg_base__'] = new RegExp(process.cwd());
-    fn['__reg_home__'] = new RegExp((require('os')).homedir());
+    fn['__reg_base__'] = new RegExp(process.cwd(), 'g');
+    fn['__reg_home__'] = new RegExp((require('os')).homedir(), 'g');
     fn.getTimeString = function() {
       var a, cache, date, list, ts;
       cache = fn['__cache__'];
@@ -109,10 +109,6 @@
       });
     };
     fn.renderPath = function(msg) {
-      var ref;
-      if ((ref = msg[0]) === '.' || ref === '~') {
-        return msg;
-      }
       return msg.replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
     };
     return $.info = fn;
