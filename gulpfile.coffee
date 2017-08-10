@@ -52,8 +52,10 @@ $$.task 'set', co ->
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
 
 $$.task 'test', co ->
+
   yield $$.compile './test/**/*.coffee'
-  $$.shell 'start npm test'
+  yield $$.shell 'npm test'
+  yield $$.remove './test/**/*.js'
 
 $$.task 'watch', ->
 

@@ -88,27 +88,6 @@ describe '$.parseTemp()', ->
 
 describe '$.serialize()', ->
 
-  LIST = [
-    {}
-    {}
-    {}
-    {}
-    {a: 1, b: 2}
-    {}
-    {}
-    {}
-    {}
-    {}
-    {}
-    {}
-  ]
-  _.each LIST, (a, i) ->
-    p = $SUBJECT[i]
-    type = $.type p
-    if type == 'number' and _.isNaN p then type = 'NaN'
-
-    it type, -> checkDeep $.serialize(p), a
-
   it 'params', ->
     a = '?a=1&b=2&c=3&d=4'
     b =
