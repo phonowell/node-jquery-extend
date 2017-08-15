@@ -1,5 +1,6 @@
 ###
 
+  $.delay([time])
   $.get(url, [data])
   $.next([delay], callback)
   $.post(url, [data])
@@ -9,21 +10,21 @@
 
 ###
 
+$.delay = co (time = 0) ->
+
+  yield new Promise (resolve) ->
+    setTimeout ->
+      resolve()
+    , time
+
+  $.info 'delay', "delayed '#{time} ms'"
+
+  # return
+  $
+
 $.get = co (url, data) ->
   res = yield axios.get url, params: data or {}
   res.data
-
-$.next = (arg...) ->
-
-  [delay, callback] = switch arg.length
-    when 1 then [0, arg[0]]
-    when 2 then arg
-    else throw new Error 'invalid argument length'
-
-  if !delay
-    return process.nextTick callback
-
-  setTimeout callback, delay
 
 $.post = co (url, data) ->
   res = yield axios.post url, qs.stringify data

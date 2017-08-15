@@ -182,7 +182,7 @@
 
   (function() {
     var fn;
-    fn = function(cmd, callback) {
+    fn = function(cmd) {
       return new Promise(function(resolve) {
         var child;
         cmd = (function() {
@@ -196,16 +196,17 @@
           }
         })();
         $.info('shell', cmd);
-        child = fn.exec(cmd);
+        child = fn.exec(cmd, function(err) {
+          if (err) {
+            return resolve(false);
+          }
+          return resolve(true);
+        });
         child.stdout.on('data', function(data) {
           return fn.info(data);
         });
-        child.stderr.on('data', function(data) {
+        return child.stderr.on('data', function(data) {
           return fn.info(data);
-        });
-        return child.on('close', function() {
-          resolve();
-          return typeof callback === "function" ? callback() : void 0;
         });
       });
     };
@@ -242,6 +243,7 @@
 
   /*
   
+    $.delay([time])
     $.get(url, [data])
     $.next([delay], callback)
     $.post(url, [data])
@@ -250,6 +252,19 @@
     $.timeStamp([arg])
    */
 
+  $.delay = co(function*(time) {
+    if (time == null) {
+      time = 0;
+    }
+    yield new Promise(function(resolve) {
+      return setTimeout(function() {
+        return resolve();
+      }, time);
+    });
+    $.info('delay', "delayed '" + time + " ms'");
+    return $;
+  });
+
   $.get = co(function*(url, data) {
     var res;
     res = (yield axios.get(url, {
@@ -257,25 +272,6 @@
     }));
     return res.data;
   });
-
-  $.next = function() {
-    var arg, callback, delay, ref;
-    arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    ref = (function() {
-      switch (arg.length) {
-        case 1:
-          return [0, arg[0]];
-        case 2:
-          return arg;
-        default:
-          throw new Error('invalid argument length');
-      }
-    })(), delay = ref[0], callback = ref[1];
-    if (!delay) {
-      return process.nextTick(callback);
-    }
-    return setTimeout(callback, delay);
-  };
 
   $.post = co(function*(url, data) {
     var res;

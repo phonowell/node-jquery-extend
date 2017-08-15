@@ -17,11 +17,11 @@ $.info 'Hello world!'
 
 ## Methods
 
+- `$.delay([time])`
 - `$.get(url, [data])`
 - `$.i(msg)`
 - `$.info([method], [type], msg)`
-- `$.log()`
-- `$.next([delay], callback)`
+- `$.log(msg)`]
 - `$.parseJson()`
 - `$.parsePts(num)`
 - `$.parseSafe()`
@@ -29,7 +29,7 @@ $.info 'Hello world!'
 - `$.parseString(data)`
 - `$.parseTemp(string, data)`
 - `$.post(url, [data])`
-- `$.shell(cmd, [callback])`
+- `$.shell(cmd)`
 - `$.serialize(string)`
 - `$.timeStamp([arg])`
     

@@ -1,6 +1,6 @@
 do ->
 
-  fn = (cmd, callback) ->
+  fn = (cmd) ->
 
     new Promise (resolve) ->
 
@@ -11,12 +11,15 @@ do ->
 
       $.info 'shell', cmd
 
-      child = fn.exec cmd
+      child = fn.exec cmd, (err) ->
+
+        if err
+          return resolve false
+
+        resolve true
+
       child.stdout.on 'data', (data) -> fn.info data
       child.stderr.on 'data', (data) -> fn.info data
-      child.on 'close', ->
-        resolve()
-        callback?()
 
   ###
 

@@ -79,4 +79,8 @@ $$.task 'watch', ->
 
 $$.task 'work', -> $$.shell 'start gulp watch'
 
-#$$.task 'z', ->
+$$.task 'x', -> throw new Error 'x'
+
+$$.task 'z', ->
+
+  $.i _.floor _.now(), -3
