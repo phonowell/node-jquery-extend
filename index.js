@@ -48,7 +48,7 @@
             throw new Error('invalid argument length');
         }
       })(), method = ref[0], type = ref[1], msg = ref[2];
-      if (fn.isSilent) {
+      if (fn['__muted_token__']) {
         return msg;
       }
       list = ["[" + (fn.getTimeString()) + "]"];
@@ -63,14 +63,18 @@
     /*
     
       __cache__
+      __muted_token__
       __reg_base__
       __reg_home__
     
       getTimeString()
+      pause(key)
       renderColor(msg)
       renderPath(msg)
+      resume(key)
      */
     fn['__cache__'] = [];
+    fn['__muted_token__'] = null;
     fn['__reg_base__'] = new RegExp(process.cwd(), 'g');
     fn['__reg_home__'] = new RegExp((require('os')).homedir(), 'g');
     fn.getTimeString = function() {
@@ -93,6 +97,14 @@
         return results;
       })()).join(':');
     };
+    fn.pause = function(key) {
+      var NS;
+      NS = '__muted_token__';
+      if (fn[NS]) {
+        return;
+      }
+      return fn[NS] = key;
+    };
     fn.renderColor = function(msg) {
       return msg.replace(/\[.*?]/g, function(text) {
         var cont;
@@ -110,6 +122,17 @@
     };
     fn.renderPath = function(msg) {
       return msg.replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
+    };
+    fn.resume = function(key) {
+      var NS;
+      NS = '__muted_token__';
+      if (!fn[NS]) {
+        return;
+      }
+      if (key !== fn[NS]) {
+        return;
+      }
+      return fn[NS] = null;
     };
     return $.info = fn;
   })();

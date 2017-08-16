@@ -20,7 +20,7 @@ do ->
       when 3 then arg
       else throw new Error 'invalid argument length'
 
-    if fn.isSilent then return msg
+    if fn['__muted_token__'] then return msg
 
     list = ["[#{fn.getTimeString()}]"]
     if type != 'default' then list.push "<#{type.toUpperCase()}>"
@@ -34,16 +34,21 @@ do ->
   ###
 
     __cache__
+    __muted_token__
     __reg_base__
     __reg_home__
 
     getTimeString()
+    pause(key)
     renderColor(msg)
     renderPath(msg)
+    resume(key)
 
   ###
 
   fn['__cache__'] = []
+
+  fn['__muted_token__'] = null
 
   fn['__reg_base__'] = new RegExp process.cwd(), 'g'
 
@@ -66,6 +71,13 @@ do ->
     cache[0] = ts
     cache[1] = (_.padStart a, 2, 0 for a in list).join ':'
 
+  fn.pause = (key) ->
+
+    NS = '__muted_token__'
+
+    if fn[NS] then return
+    fn[NS] = key
+
   fn.renderColor = (msg) ->
 
     msg
@@ -86,6 +98,14 @@ do ->
 
     msg.replace fn['__reg_base__'], '.'
     .replace fn['__reg_home__'], '~'
+
+  fn.resume = (key) ->
+
+    NS = '__muted_token__'
+
+    if !fn[NS] then return
+    if key != fn[NS] then return
+    fn[NS] = null
 
   # return
   $.info = fn

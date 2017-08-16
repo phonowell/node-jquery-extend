@@ -1,10 +1,14 @@
 # UPDATES
 
+### v0.0.14 @ 8.16.2017
+
+- Rewrote `$.info()`.
+
 ### v0.0.13 @ 8.15.2017
 
-- Added '$.delay()'.
-- Removed '$.next()'.
-- Rewrote '$.shell()'.
+- Added `$.delay()`.
+- Removed `$.next()`.
+- Rewrote `$.shell()`.
 - Updated *gulp* files.
 - Updated *test* files.
 
