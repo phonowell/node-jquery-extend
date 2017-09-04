@@ -164,8 +164,6 @@ describe '$.parseString(data)', ->
     'NaN'
   ]
 
-  $.i LIST
-
   _.each LIST, (a, i) ->
 
     p = SUBJECT[i]

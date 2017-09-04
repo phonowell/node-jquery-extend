@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.16 @9.4.2017
+
+- Updated `$.info()`.
+
 ### v0.0.15 @ 9.4.2017
 
 - Rewrote `$.parseString()`.

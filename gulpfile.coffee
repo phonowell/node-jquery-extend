@@ -1,5 +1,5 @@
 $$ = require 'fire-keeper'
-{_, Promise} = $$.library
+{Promise} = $$.library
 co = Promise.coroutine
 
 # task
@@ -14,8 +14,6 @@ co = Promise.coroutine
 ###
 
 $$.task 'build', co ->
-
-  yield $$.remove './index.js'
 
   yield $$.compile './source/index.coffee', './',
     minify: false

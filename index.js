@@ -106,7 +106,7 @@
       return fn[NS] = key;
     };
     fn.renderColor = function(msg) {
-      return msg.replace(/\[.*?]/g, function(text) {
+      return ($.parseString(msg)).replace(/\[.*?]/g, function(text) {
         var cont;
         cont = text.replace(/\[|]/g, '');
         return "[" + (colors.gray(cont)) + "]";
@@ -121,7 +121,7 @@
       });
     };
     fn.renderPath = function(msg) {
-      return msg.replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
+      return ($.parseString(msg)).replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
     };
     fn.resume = function(key) {
       var NS;

@@ -80,7 +80,7 @@ do ->
 
   fn.renderColor = (msg) ->
 
-    msg
+    ($.parseString msg)
     # [xxx]
     .replace /\[.*?]/g, (text) ->
       cont = text.replace /\[|]/g, ''
@@ -96,7 +96,8 @@ do ->
 
   fn.renderPath = (msg) ->
 
-    msg.replace fn['__reg_base__'], '.'
+    ($.parseString msg)
+    .replace fn['__reg_base__'], '.'
     .replace fn['__reg_home__'], '~'
 
   fn.resume = (key) ->
