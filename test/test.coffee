@@ -164,16 +164,18 @@ describe '$.parseString(data)', ->
     'NaN'
   ]
 
+  $.i LIST
+
   _.each LIST, (a, i) ->
 
     p = SUBJECT[i]
-    type = $.type p
-    if type == 'number' and _.isNaN p then type = 'NaN'
 
     it "$.parseString(#{p})", ->
 
-      if $.parseString(p) != a
-        throw new Error()
+      res = $.parseString p
+
+      if res != a
+        throw new Error res
 
 describe '$.parseTemp(string, data)', ->
 

@@ -178,18 +178,17 @@
   };
 
   $.parseString = function(data) {
-    var d;
-    switch ($.type(d = data)) {
-      case 'string':
-        return d;
+    switch ($.type(data)) {
       case 'array':
         return (JSON.stringify({
-          _obj: d
-        })).replace(/\{(.*)\}/, '$1').replace(/"_obj":/, '');
+          __container__: data
+        })).replace(/{(.*)}/, '$1').replace(/"__container__":/, '');
       case 'object':
-        return JSON.stringify(d);
+        return JSON.stringify(data);
+      case 'string':
+        return data;
       default:
-        return String(d);
+        return String(data);
     }
   };
 
