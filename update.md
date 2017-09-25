@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.17 @9.5.2017
+
+- Updated package(s).
+
 ### v0.0.16 @9.4.2017
 
 - Updated `$.info()`.

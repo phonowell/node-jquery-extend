@@ -39,3 +39,9 @@ $$.task 'test', co ->
   yield $$.compile './test/**/*.coffee'
   yield $$.shell 'npm test'
   yield $$.remove './test/**/*.js'
+
+$$.task 'z', co ->
+
+  r2 = require 'r2'
+
+  $.i yield r2('http://www.acfun.tv/').text
