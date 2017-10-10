@@ -6,16 +6,17 @@ co = Promise.coroutine
 
 ###
 
-  build
-  lint
-  set
-  test
+  build()
+  lint()
+  set()
+  test()
 
 ###
 
 $$.task 'build', co ->
 
   yield $$.compile './source/index.coffee', './',
+    bare: true
     minify: false
 
 $$.task 'lint', co ->
@@ -29,7 +30,9 @@ $$.task 'lint', co ->
 
 $$.task 'set', co ->
 
-  if !(ver = $$.argv.version) then return
+  {ver} = $$.argv
+  if !ver
+    throw new Error 'empty ver'
 
   yield $$.replace './package.json'
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
@@ -40,8 +43,4 @@ $$.task 'test', co ->
   yield $$.shell 'npm test'
   yield $$.remove './test/**/*.js'
 
-$$.task 'z', co ->
-
-  r2 = require 'r2'
-
-  $.i yield r2('http://www.acfun.tv/').text
+#$$.task 'z', co ->

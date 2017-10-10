@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-extend",
   "devDependencies": {
-    "mocha": "^3.5.3"
+    "mocha": "^4.0.1"
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.1",
     "colors": "^1.1.2",
-    "fire-keeper": "0.0.72",
-    "node-jquery-lite": "^0.7.2"
+    "fire-keeper": "0.0.74",
+    "node-jquery-lite": "^0.8.0"
   }
 }

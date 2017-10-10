@@ -5,13 +5,13 @@ A tiny toolkit, based on [node-jquery-lite](https://github.com/phonowell/node-jq
 ## Install
 
 ```shell
-$ npm i node-jquery-extend
+npm i node-jquery-extend
 ```
 
 ## Usage
 
 ```coffeescript
-$ = require 'node-jquery-extend'
+$ = require('node-jquery-extend')()
 $.info 'Hello world!'
 ```
 
@@ -40,7 +40,7 @@ This project is **NOT STABLE**.
 ## Test
 
 ```shell
-$ npm test
+npm test
 ```
 
 ## Updates

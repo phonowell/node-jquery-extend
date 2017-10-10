@@ -1,7 +1,7 @@
 # require
 
-$ = require './../index'
-_ = $._
+$ = require('./../index')()
+_ = require 'lodash'
 Promise = require 'bluebird'
 co = Promise.coroutine
 

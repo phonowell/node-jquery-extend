@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.0.18 @10.11.2017
+
+- Rewrote `module.exports()`.
+
 ### v0.0.17 @9.5.2017
 
 - Updated package(s).
@@ -21,8 +25,6 @@
 - Added `$.delay()`.
 - Removed `$.next()`.
 - Rewrote `$.shell()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.0.12 @ 8.10.2017
 
@@ -36,7 +38,6 @@
 ### v0.0.9 @ 7.6.2017
 
 - Rewrote `$.shell()`.
-- Updated *gulp* files.
 
 ### v0.0.8 @ 7.3.2017
 - Required [bluebird](https://github.com/petkaantonov/bluebird) now.
@@ -63,7 +64,6 @@
 
 - Updated `$.info()`.
 - Updated `$.next()`.
-- Updated *test* files.
 
 ### v0.0.2 @ 12.21.2016
 
