@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
@@ -33,6 +33,6 @@
     "bluebird": "^3.5.1",
     "colors": "^1.1.2",
     "fire-keeper": "0.0.74",
-    "node-jquery-lite": "^0.8.0"
+    "node-jquery-lite": "^0.8.1"
   }
 }

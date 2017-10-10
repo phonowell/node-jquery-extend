@@ -1,15 +1,21 @@
-var slice = [].slice;
+(function() {
+  var $, Promise, _, axios, co, colors, qs,
+    slice = [].slice;
 
-module.exports = function($$) {
-  var $, Promise, _, axios, co, colors, qs;
-  $ = require('node-jquery-lite')();
+  module.exports = $ = require('node-jquery-lite');
+
   axios = require('axios');
+
   qs = require('qs');
+
   Promise = require('bluebird');
+
   co = Promise.coroutine;
+
   colors = require('colors/safe');
-  _ = require('lodash');
-  $$ || ($$ = $);
+
+  _ = $._;
+
 
   /*
   
@@ -17,10 +23,12 @@ module.exports = function($$) {
     info([method], [type], msg)
     log()
    */
-  $$.i = function(msg) {
-    $$.log(msg);
+
+  $.i = function(msg) {
+    $.log(msg);
     return msg;
   };
+
   (function() {
     var fn;
     fn = function() {
@@ -51,12 +59,12 @@ module.exports = function($$) {
     };
 
     /*
-      
+    
       __cache__
       __muted_token__
       __reg_base__
       __reg_home__
-      
+    
       getTimeString()
       pause(key)
       renderColor(msg)
@@ -96,7 +104,7 @@ module.exports = function($$) {
       return fn[NS] = key;
     };
     fn.renderColor = function(msg) {
-      return ($$.parseString(msg)).replace(/\[.*?]/g, function(text) {
+      return ($.parseString(msg)).replace(/\[.*?]/g, function(text) {
         var cont;
         cont = text.replace(/\[|]/g, '');
         return "[" + (colors.gray(cont)) + "]";
@@ -111,7 +119,7 @@ module.exports = function($$) {
       });
     };
     fn.renderPath = function(msg) {
-      return ($$.parseString(msg)).replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
+      return ($.parseString(msg)).replace(fn['__reg_base__'], '.').replace(fn['__reg_home__'], '~');
     };
     fn.resume = function(key) {
       var NS;
@@ -124,9 +132,11 @@ module.exports = function($$) {
       }
       return fn[NS] = null;
     };
-    return $$.info = fn;
+    return $.info = fn;
   })();
-  $$.log = console.log;
+
+  $.log = console.log;
+
 
   /*
   
@@ -137,8 +147,10 @@ module.exports = function($$) {
     parseString(data)
     parseTemp(string, data)
    */
-  $$.parseJson = $$.parseJSON;
-  $$.parsePts = function(num) {
+
+  $.parseJson = $.parseJSON;
+
+  $.parsePts = function(num) {
     var n;
     if ((n = (num || 0) | 0) >= 1e5) {
       return (((n * 0.001) | 0) / 10) + '万';
@@ -146,22 +158,25 @@ module.exports = function($$) {
       return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
     }
   };
-  $$.parseSafe = _.escape;
-  $$.parseShortDate = function(option) {
+
+  $.parseSafe = _.escape;
+
+  $.parseShortDate = function(option) {
     var a, arr, date, i, j, len;
-    date = $$.type(option) === 'date' ? option : new Date(option);
+    date = $.type(option) === 'date' ? option : new Date(option);
     arr = [date.getFullYear(), 1 + date.getMonth(), date.getDate()];
     for (i = j = 0, len = arr.length; j < len; i = ++j) {
       a = arr[i];
-      arr[i] = $$.parseString(a);
+      arr[i] = $.parseString(a);
       if (i && arr[i].length < 2) {
         arr[i] = '0' + arr[i];
       }
     }
     return arr.join('');
   };
-  $$.parseString = function(data) {
-    switch ($$.type(data)) {
+
+  $.parseString = function(data) {
+    switch ($.type(data)) {
       case 'array':
         return (JSON.stringify({
           __container__: data
@@ -174,7 +189,8 @@ module.exports = function($$) {
         return String(data);
     }
   };
-  $$.parseTemp = function(string, data) {
+
+  $.parseTemp = function(string, data) {
     var k, s, v;
     s = string;
     for (k in data) {
@@ -183,13 +199,14 @@ module.exports = function($$) {
     }
     return s;
   };
+
   (function() {
     var fn;
     fn = function(cmd) {
       return new Promise(function(resolve) {
         var child;
         cmd = (function() {
-          switch ($$.type(cmd)) {
+          switch ($.type(cmd)) {
             case 'array':
               return cmd.join(" " + fn.separator + " ");
             case 'string':
@@ -198,7 +215,7 @@ module.exports = function($$) {
               throw new Error('invalid argument type');
           }
         })();
-        $$.info('shell', cmd);
+        $.info('shell', cmd);
         child = fn.exec(cmd, function(err) {
           if (err) {
             return resolve(false);
@@ -215,10 +232,10 @@ module.exports = function($$) {
     };
 
     /*
-      
+    
       exec
       separator
-      
+    
       info(string)
      */
     fn.exec = (require('child_process')).exec;
@@ -233,15 +250,16 @@ module.exports = function($$) {
       }
     })();
     fn.info = function(string) {
-      string = $$.trim(string);
+      string = $.trim(string);
       if (!string.length) {
         return;
       }
       string = string.replace(/\r/g, '\n').replace(/\n{2,}/g, '');
-      return $$.log(string);
+      return $.log(string);
     };
-    return $$.shell = fn;
+    return $.shell = fn;
   })();
+
 
   /*
   
@@ -253,7 +271,8 @@ module.exports = function($$) {
     shell(cmd, callback)
     timeStamp([arg])
    */
-  $$.delay = co(function*(time) {
+
+  $.delay = co(function*(time) {
     if (time == null) {
       time = 0;
     }
@@ -262,24 +281,27 @@ module.exports = function($$) {
         return resolve();
       }, time);
     });
-    $$.info('delay', "delayed '" + time + " ms'");
+    $.info('delay', "delayed '" + time + " ms'");
     return $;
   });
-  $$.get = co(function*(url, data) {
+
+  $.get = co(function*(url, data) {
     var res;
     res = (yield axios.get(url, {
       params: data || {}
     }));
     return res.data;
   });
-  $$.post = co(function*(url, data) {
+
+  $.post = co(function*(url, data) {
     var res;
     res = (yield axios.post(url, qs.stringify(data)));
     return res.data;
   });
-  $$.serialize = function(string) {
+
+  $.serialize = function(string) {
     var a, b, j, key, len, ref, ref1, res, value;
-    switch ($$.type(string)) {
+    switch ($.type(string)) {
       case 'object':
         return string;
       case 'string':
@@ -301,9 +323,10 @@ module.exports = function($$) {
         throw new Error('invalid argument type');
     }
   };
-  $$.timeStamp = function(arg) {
+
+  $.timeStamp = function(arg) {
     var a, b, date, list, string;
-    switch ($$.type(arg)) {
+    switch ($.type(arg)) {
       case 'null':
       case 'undefined':
         return _.floor(_.now(), -3);
@@ -327,5 +350,5 @@ module.exports = function($$) {
     }
     return date.getTime();
   };
-  return $$;
-};
+
+}).call(this);

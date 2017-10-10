@@ -16,7 +16,6 @@ co = Promise.coroutine
 $$.task 'build', co ->
 
   yield $$.compile './source/index.coffee', './',
-    bare: true
     minify: false
 
 $$.task 'lint', co ->

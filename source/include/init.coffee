@@ -1,21 +1,15 @@
-module.exports = ($$) ->
+module.exports = $ = require 'node-jquery-lite'
 
-  # require
+# require
 
-  $ = require('node-jquery-lite')()
+axios = require 'axios'
+qs = require 'qs'
 
-  axios = require 'axios'
-  qs = require 'qs'
+Promise = require 'bluebird'
+co = Promise.coroutine
 
-  Promise = require 'bluebird'
-  co = Promise.coroutine
+colors = require 'colors/safe'
 
-  colors = require 'colors/safe'
+# lodash
 
-  # lodash
-
-  _ = require 'lodash'
-
-  # init
-
-  $$ or= $
+{_} = $

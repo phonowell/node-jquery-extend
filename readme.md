@@ -11,7 +11,7 @@ npm i node-jquery-extend
 ## Usage
 
 ```coffeescript
-$ = require('node-jquery-extend')()
+$ = require 'node-jquery-extend'
 $.info 'Hello world!'
 ```
 

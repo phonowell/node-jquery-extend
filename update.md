@@ -1,8 +1,12 @@
 # UPDATES
 
-### v0.0.18 @10.11.2017
+### v0.0.19 @10.11.2017
 
-- Rewrote `module.exports()`.
+- Reverted.
+
+### ~~v0.0.18 @10.11.2017~~
+
+- ~~Rewrote `module.exports()`.~~
 
 ### v0.0.17 @9.5.2017
 
