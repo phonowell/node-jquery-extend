@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-extend",
   "devDependencies": {
+    "fire-keeper": "^0.0.78",
     "mocha": "^4.0.1"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.17.0",
     "bluebird": "^3.5.1",
     "colors": "^1.1.2",
-    "fire-keeper": "0.0.74",
     "node-jquery-lite": "^0.8.1"
   }
 }
