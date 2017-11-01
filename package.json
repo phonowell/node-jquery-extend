@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-extend",
   "devDependencies": {
-    "fire-keeper": "^0.0.78",
+    "fire-keeper": "0.0.79",
     "mocha": "^4.0.1"
   },
   "dependencies": {
