@@ -9,7 +9,12 @@
 
 ###
 
-$.parseJson = $.parseJSON
+$.parseJson = (input) ->
+  switch $.type input
+    when 'array' then input
+    when 'object' then input
+    when 'string' then $.parseJSON input
+    else null
 
 $.parsePts = (num) ->
   if (n = (num or 0) | 0) >= 1e5 then (((n * 0.001) | 0) / 10) + '万'

@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-extend",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
@@ -19,20 +19,20 @@
     "coffeescript"
   ],
   "author": "Mimiko Phonowell <phonowell@gmail.com>",
-  "license": "GPL",
+  "license": "MIT",
   "url": "https://github.com/phonowell/node-jquery-extend",
   "bugs": {
     "url": "https://github.com/phonowell/node-jquery-extend/issues"
   },
   "homepage": "https://github.com/phonowell/node-jquery-extend",
   "devDependencies": {
-    "fire-keeper": "0.0.79",
+    "fire-keeper": "0.0.86",
     "mocha": "^4.0.1"
   },
   "dependencies": {
-    "axios": "^0.17.0",
+    "axios": "^0.17.1",
     "bluebird": "^3.5.1",
     "colors": "^1.1.2",
-    "node-jquery-lite": "^0.8.1"
+    "node-jquery-lite": "^0.8.2"
   }
 }

@@ -148,7 +148,18 @@
     parseTemp(string, data)
    */
 
-  $.parseJson = $.parseJSON;
+  $.parseJson = function(input) {
+    switch ($.type(input)) {
+      case 'array':
+        return input;
+      case 'object':
+        return input;
+      case 'string':
+        return $.parseJSON(input);
+      default:
+        return null;
+    }
+  };
 
   $.parsePts = function(num) {
     var n;

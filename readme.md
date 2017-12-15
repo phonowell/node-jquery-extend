@@ -32,10 +32,6 @@ $.info 'Hello world!'
 - `$.shell(cmd)`
 - `$.serialize(string)`
 - `$.timeStamp([arg])`
-    
-## Attention
-
-This project is **NOT STABLE**.
 
 ## Test
 

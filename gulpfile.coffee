@@ -23,6 +23,10 @@ $$.task 'lint', co ->
   yield $$.task('kokoro')()
 
   yield $$.lint [
+    './*.md'
+  ]
+
+  yield $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
   ]

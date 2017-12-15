@@ -1,18 +1,24 @@
-# UPDATES
+# node-jquery-extend
 
-### v0.0.19 @10.11.2017
+## UPDATE
+
+### v0.0.20 @ 12.15.2017
+
+- Rewrote `$.parseJson()`.
+
+### v0.0.19 @ 10.11.2017
 
 - Reverted.
 
-### ~~v0.0.18 @10.11.2017~~
+### ~~v0.0.18 @ 10.11.2017~~
 
 - ~~Rewrote `module.exports()`.~~
 
-### v0.0.17 @9.5.2017
+### v0.0.17 @ 9.5.2017
 
 - Updated package(s).
 
-### v0.0.16 @9.4.2017
+### v0.0.16 @ 9.4.2017
 
 - Updated `$.info()`.
 
@@ -44,19 +50,23 @@
 - Rewrote `$.shell()`.
 
 ### v0.0.8 @ 7.3.2017
+
 - Required [bluebird](https://github.com/petkaantonov/bluebird) now.
 
 ### v0.0.7 @ 7.3.2017
+
 - Updated `$.get()`.
 - Updated `$.post()`.
 
 ### v0.0.6 @ 7.3.2017
+
 - Added `$.get()`.
 - Added `$.post`.
 - Added `$.serialize()`.
 - Removed `$.parseJSON()`.
 
 ### v0.0.5 @ 6.14.2017
+
 - Updated `$.info()`.
 
 ### v0.0.4 @ 4.13.2017

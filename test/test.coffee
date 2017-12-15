@@ -13,7 +13,7 @@ SUBJECT = [
   true # boolean
   [1, 2, 3] # array
   {a: 1, b: 2} # object
-  -> return null # function
+  -> null # function
   new Date() # date
   new Error('All Right') # error
   new Buffer('String') # buffer
@@ -104,7 +104,9 @@ describe '$.parseJson()', ->
 
   it '$.parseJson()', ->
 
-    if $.parseJson != $.parseJSON
+    res = $.parseJson()
+
+    if res
       throw new Error()
 
 describe '$.parsePts(num)', ->
