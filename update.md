@@ -2,6 +2,10 @@
 
 ## UPDATE
 
+### v0.0.21 @ 12.15.2017
+
+- Updated `$.parseJson()`.
+
 ### v0.0.20 @ 12.15.2017
 
 - Rewrote `$.parseJson()`.

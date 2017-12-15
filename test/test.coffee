@@ -109,6 +109,17 @@ describe '$.parseJson()', ->
     if res
       throw new Error()
 
+  it "$.parseJson(new Buffer('{message: 'a test line'}'))", ->
+
+    string = 'a test line'
+    object = message: string
+    buffer = new Buffer $.parseString object
+
+    res = $.parseJson buffer
+
+    if res.message != 'a test line'
+      throw new Error
+
 describe '$.parsePts(num)', ->
 
   LIST = [

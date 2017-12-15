@@ -12,6 +12,7 @@
 $.parseJson = (input) ->
   switch $.type input
     when 'array' then input
+    when 'buffer' then $.parseJSON input
     when 'object' then input
     when 'string' then $.parseJSON input
     else null

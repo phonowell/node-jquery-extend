@@ -152,6 +152,8 @@
     switch ($.type(input)) {
       case 'array':
         return input;
+      case 'buffer':
+        return $.parseJSON(input);
       case 'object':
         return input;
       case 'string':
