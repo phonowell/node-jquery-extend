@@ -2,6 +2,11 @@
 
 ## UPDATE
 
+### v0.0.22 @ 1.29.2018
+
+- Not required [bluebird](https://github.com/petkaantonov/bluebird) now.
+- Removed `$.shell()`.
+
 ### v0.0.21 @ 12.15.2017
 
 - Updated `$.parseJson()`.

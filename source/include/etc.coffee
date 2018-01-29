@@ -10,9 +10,9 @@
 
 ###
 
-$.delay = co (time = 0) ->
+$.delay = (time = 0) ->
 
-  yield new Promise (resolve) ->
+  await new Promise (resolve) ->
     setTimeout ->
       resolve()
     , time
@@ -22,12 +22,12 @@ $.delay = co (time = 0) ->
   # return
   $
 
-$.get = co (url, data) ->
-  res = yield axios.get url, params: data or {}
+$.get = (url, data) ->
+  res = await axios.get url, params: data or {}
   res.data
 
-$.post = co (url, data) ->
-  res = yield axios.post url, qs.stringify data
+$.post = (url, data) ->
+  res = await axios.post url, qs.stringify data
   res.data
 
 $.serialize = (string) ->

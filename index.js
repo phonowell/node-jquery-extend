@@ -1,29 +1,25 @@
 (function() {
-  var $, Promise, _, axios, co, colors, qs,
-    slice = [].slice;
+  var $, _, axios, colors, qs;
 
   module.exports = $ = require('node-jquery-lite');
 
+  // require
   axios = require('axios');
 
   qs = require('qs');
 
-  Promise = require('bluebird');
-
-  co = Promise.coroutine;
-
   colors = require('colors/safe');
 
-  _ = $._;
-
+  // lodash
+  ({_} = $);
 
   /*
-  
+
     i(msg)
     info([method], [type], msg)
     log()
-   */
 
+  */
   $.i = function(msg) {
     $.log(msg);
     return msg;
@@ -31,10 +27,9 @@
 
   (function() {
     var fn;
-    fn = function() {
-      var arg, list, method, msg, ref, type;
-      arg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      ref = (function() {
+    fn = function(...arg) {
+      var list, method, msg, type;
+      [method, type, msg] = (function() {
         switch (arg.length) {
           case 1:
             return ['log', 'default', arg[0]];
@@ -45,32 +40,33 @@
           default:
             throw new Error('invalid argument length');
         }
-      })(), method = ref[0], type = ref[1], msg = ref[2];
+      })();
       if (fn['__muted_token__']) {
         return msg;
       }
-      list = ["[" + (fn.getTimeString()) + "]"];
+      list = [`[${fn.getTimeString()}]`];
       if (type !== 'default') {
-        list.push("<" + (type.toUpperCase()) + ">");
+        list.push(`<${type.toUpperCase()}>`);
       }
       list.push(fn.renderPath(msg));
       console[method](fn.renderColor(list.join(' ')));
+      // return
       return msg;
     };
-
     /*
-    
-      __cache__
-      __muted_token__
-      __reg_base__
-      __reg_home__
-    
-      getTimeString()
-      pause(key)
-      renderColor(msg)
-      renderPath(msg)
-      resume(key)
-     */
+
+    __cache__
+    __muted_token__
+    __reg_base__
+    __reg_home__
+
+    getTimeString()
+    pause(key)
+    renderColor(msg)
+    renderPath(msg)
+    resume(key)
+
+    */
     fn['__cache__'] = [];
     fn['__muted_token__'] = null;
     fn['__reg_base__'] = new RegExp(process.cwd(), 'g');
@@ -104,14 +100,17 @@
       return fn[NS] = key;
     };
     fn.renderColor = function(msg) {
+      // [xxx]
       return ($.parseString(msg)).replace(/\[.*?]/g, function(text) {
         var cont;
         cont = text.replace(/\[|]/g, '');
-        return "[" + (colors.gray(cont)) + "]";
+        return `[${colors.gray(cont)}]`;
+      // <xxx>
       }).replace(/<.*?>/g, function(text) {
         var cont;
         cont = text.replace(/<|>/g, '');
-        return "" + (colors.gray('<')) + (colors.cyan(cont)) + (colors.gray('>'));
+        return `${colors.gray('<')}${colors.cyan(cont)}${colors.gray('>')}`;
+      // 'xxx'
       }).replace(/'.*?'/g, function(text) {
         var cont;
         cont = text.replace(/'/g, '');
@@ -132,22 +131,22 @@
       }
       return fn[NS] = null;
     };
+    // return
     return $.info = fn;
   })();
 
   $.log = console.log;
 
-
   /*
-  
+
     parseJson()
     parsePts(num)
     parseSafe()
     parseShortDate(option)
     parseString(data)
     parseTemp(string, data)
-   */
 
+  */
   $.parseJson = function(input) {
     switch ($.type(input)) {
       case 'array':
@@ -213,107 +212,44 @@
     return s;
   };
 
-  (function() {
-    var fn;
-    fn = function(cmd) {
-      return new Promise(function(resolve) {
-        var child;
-        cmd = (function() {
-          switch ($.type(cmd)) {
-            case 'array':
-              return cmd.join(" " + fn.separator + " ");
-            case 'string':
-              return cmd;
-            default:
-              throw new Error('invalid argument type');
-          }
-        })();
-        $.info('shell', cmd);
-        child = fn.exec(cmd, function(err) {
-          if (err) {
-            return resolve(false);
-          }
-          return resolve(true);
-        });
-        child.stdout.on('data', function(data) {
-          return fn.info(data);
-        });
-        return child.stderr.on('data', function(data) {
-          return fn.info(data);
-        });
-      });
-    };
-
-    /*
-    
-      exec
-      separator
-    
-      info(string)
-     */
-    fn.exec = (require('child_process')).exec;
-    fn.separator = (function() {
-      var platform;
-      platform = (require('os')).platform();
-      switch (platform) {
-        case 'win32':
-          return '&';
-        default:
-          return '&&';
-      }
-    })();
-    fn.info = function(string) {
-      string = $.trim(string);
-      if (!string.length) {
-        return;
-      }
-      string = string.replace(/\r/g, '\n').replace(/\n{2,}/g, '');
-      return $.log(string);
-    };
-    return $.shell = fn;
-  })();
-
-
   /*
-  
-    delay([time])
-    get(url, [data])
-    next([delay], callback)
-    post(url, [data])
-    serialize(string)
-    shell(cmd, callback)
-    timeStamp([arg])
-   */
 
-  $.delay = co(function*(time) {
-    if (time == null) {
-      time = 0;
-    }
-    yield new Promise(function(resolve) {
+  delay([time])
+  get(url, [data])
+  next([delay], callback)
+  post(url, [data])
+  serialize(string)
+  shell(cmd, callback)
+  timeStamp([arg])
+
+  */
+  $.delay = async function(time = 0) {
+    await new Promise(function(resolve) {
       return setTimeout(function() {
         return resolve();
       }, time);
     });
-    $.info('delay', "delayed '" + time + " ms'");
+    $.info('delay', `delayed '${time} ms'`);
+    // return
     return $;
-  });
+  };
 
-  $.get = co(function*(url, data) {
+  $.get = async function(url, data) {
     var res;
-    res = (yield axios.get(url, {
+    res = (await axios.get(url, {
       params: data || {}
     }));
     return res.data;
-  });
+  };
 
-  $.post = co(function*(url, data) {
+  $.post = async function(url, data) {
     var res;
-    res = (yield axios.post(url, qs.stringify(data)));
+    res = (await axios.post(url, qs.stringify(data)));
     return res.data;
-  });
+  };
 
   $.serialize = function(string) {
-    var a, b, j, key, len, ref, ref1, res, value;
+    var a, b, j, key, len, ref, res, value;
     switch ($.type(string)) {
       case 'object':
         return string;
@@ -326,7 +262,7 @@
         for (j = 0, len = ref.length; j < len; j++) {
           a = ref[j];
           b = a.split('=');
-          ref1 = [_.trim(b[0]), _.trim(b[1])], key = ref1[0], value = ref1[1];
+          [key, value] = [_.trim(b[0]), _.trim(b[1])];
           if (key.length) {
             res[key] = value;
           }

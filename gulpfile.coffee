@@ -1,6 +1,4 @@
 $$ = require 'fire-keeper'
-{Promise} = $$.library
-co = Promise.coroutine
 
 # task
 
@@ -13,37 +11,39 @@ co = Promise.coroutine
 
 ###
 
-$$.task 'build', co ->
+$$.task 'build', ->
 
-  yield $$.compile './source/index.coffee', './',
+  await $$.compile './source/index.coffee', './',
     minify: false
 
-$$.task 'lint', co ->
+$$.task 'lint', ->
 
-  yield $$.task('kokoro')()
+  await $$.task('kokoro')()
 
-  yield $$.lint [
+  await $$.lint [
     './*.md'
   ]
 
-  yield $$.lint [
+  await $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
   ]
 
-$$.task 'set', co ->
+$$.task 'set', ->
 
   {ver} = $$.argv
   if !ver
     throw new Error 'empty ver'
 
-  yield $$.replace './package.json'
-  , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
+  pkg = './package.json'
+  data = await $$.read pkg
+  data.version = ver
+  await $$.write pkg, data
 
-$$.task 'test', co ->
+$$.task 'test', ->
 
-  yield $$.compile './test/**/*.coffee'
-  yield $$.shell 'npm test'
-  yield $$.remove './test/**/*.js'
+  await $$.compile './test/**/*.coffee'
+  await $$.shell 'npm test'
+  await $$.remove './test/**/*.js'
 
-#$$.task 'z', co ->
+#$$.task 'z', ->

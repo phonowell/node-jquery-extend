@@ -2,8 +2,6 @@
 
 $ = require './../index'
 {_} = $
-Promise = require 'bluebird'
-co = Promise.coroutine
 
 # test variable
 
@@ -38,18 +36,17 @@ SUBJECT = [
   parseString(data)
   parseTemp(string, data)
   serialize(string)
-  shell(cmd)
   timeStamp([arg])
 
 ###
 
 describe '$.delay([time])', ->
 
-  it '$.delay(1e3)', co ->
+  it '$.delay(1e3)', ->
 
     st = _.now()
 
-    res = yield $.delay 1e3
+    res = await $.delay 1e3
 
     if res != $
       throw new Error 1
@@ -61,9 +58,9 @@ describe '$.delay([time])', ->
 
 describe '$.get(url, [data])', ->
 
-  it "$.get('https://app.anitama.net/web')", co ->
+  it "$.get('https://app.anitama.net/web')", ->
 
-    data = yield $.get 'https://app.anitama.net/web'
+    data = await $.get 'https://app.anitama.net/web'
 
     if $.type(data) != 'object'
       throw new Error 1
@@ -212,15 +209,6 @@ describe '$.serialize(string)', ->
       d: '4'
 
     unless _.isEqual $.serialize(a), b
-      throw new Error()
-
-describe '$.shell(cmd)', ->
-
-  it "$.shell('gulp noop')", co ->
-
-    res = yield $.shell 'gulp noop'
-
-    if !res
       throw new Error()
 
 describe '$.timeStamp([arg])', ->
