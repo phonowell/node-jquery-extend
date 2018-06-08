@@ -2,6 +2,10 @@
 
 ## UPDATE
 
+### v0.0.23 @ 6.8.2018
+
+- Rewrote `$.info()`.
+
 ### v0.0.22 @ 1.29.2018
 
 - Not required [bluebird](https://github.com/petkaantonov/bluebird) now.

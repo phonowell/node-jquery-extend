@@ -1,49 +1,47 @@
-$$ = require 'fire-keeper'
+$ = require 'fire-keeper'
 
 # task
 
 ###
-
-  build()
-  lint()
-  set()
-  test()
-
+build()
+lint()
+set()
+test()
 ###
 
-$$.task 'build', ->
+$.task 'build', ->
 
-  await $$.compile './source/index.coffee', './',
+  await $.compile './source/index.coffee', './',
     minify: false
 
-$$.task 'lint', ->
+$.task 'lint', ->
 
-  await $$.task('kokoro')()
+  await $.task('kokoro')()
 
-  await $$.lint [
+  await $.lint [
     './*.md'
   ]
 
-  await $$.lint [
+  await $.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
   ]
 
-$$.task 'set', ->
+$.task 'set', ->
 
-  {ver} = $$.argv
+  {ver} = $.argv
   if !ver
     throw new Error 'empty ver'
 
   pkg = './package.json'
-  data = await $$.read pkg
+  data = await $.read pkg
   data.version = ver
-  await $$.write pkg, data
+  await $.write pkg, data
 
-$$.task 'test', ->
+$.task 'test', ->
 
-  await $$.compile './test/**/*.coffee'
-  await $$.shell 'npm test'
-  await $$.remove './test/**/*.js'
+  await $.compile './test/**/*.coffee'
+  await $.shell 'npm test'
+  await $.remove './test/**/*.js'
 
-#$$.task 'z', ->
+# $.task 'z', ->

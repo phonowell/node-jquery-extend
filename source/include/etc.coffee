@@ -2,10 +2,8 @@
 
   delay([time])
   get(url, [data])
-  next([delay], callback)
   post(url, [data])
   serialize(string)
-  shell(cmd, callback)
   timeStamp([arg])
 
 ###
@@ -19,8 +17,7 @@ $.delay = (time = 0) ->
 
   $.info 'delay', "delayed '#{time} ms'"
 
-  # return
-  $
+  $ # return
 
 $.get = (url, data) ->
   res = await axios.get url, params: data or {}

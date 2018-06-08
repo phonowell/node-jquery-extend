@@ -1,12 +1,10 @@
 ###
-
-  parseJson()
-  parsePts(num)
-  parseSafe()
-  parseShortDate(option)
-  parseString(data)
-  parseTemp(string, data)
-
+parseJson(input)
+parsePts(num)
+parseSafe()
+parseShortDate(option)
+parseString(data)
+parseTemp(string, data)
 ###
 
 $.parseJson = (input) ->
