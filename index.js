@@ -14,13 +14,11 @@
   ({_} = $);
 
   /*
-
-    delay([time])
-    get(url, [data])
-    post(url, [data])
-    serialize(string)
-    timeStamp([arg])
-
+  delay([time])
+  get(url, [data])
+  post(url, [data])
+  serialize(string)
+  timeStamp([arg])
   */
   $.delay = async function(time = 0) {
     await new Promise(function(resolve) {
@@ -170,7 +168,11 @@
         message = this.renderPath(string).replace(/'.*?'/g, function(text) {
           var cont;
           cont = text.replace(/'/g, '');
-          return `'${colors.magenta(cont)}'`;
+          if (cont.length) {
+            return colors.magenta(cont);
+          } else {
+            return "''";
+          }
         });
         return message; // return
       }

@@ -23,21 +23,19 @@ SUBJECT = [
 # test lines
 
 ###
-
-  delay([time])
-  get(url, [data])
-  i(msg)
-  info([method], [type], msg)
-  log()
-  parseJson()
-  parsePts(num)
-  parseSafe()
-  parseShortDate(option)
-  parseString(data)
-  parseTemp(string, data)
-  serialize(string)
-  timeStamp([arg])
-
+delay([time])
+get(url, [data])
+i(msg)
+info([method], [type], msg)
+log()
+parseJson()
+parsePts(num)
+parseSafe()
+parseShortDate(option)
+parseString(data)
+parseTemp(string, data)
+serialize(string)
+timeStamp([arg])
 ###
 
 describe '$.delay([time])', ->

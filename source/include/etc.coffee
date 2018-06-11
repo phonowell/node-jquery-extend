@@ -1,11 +1,9 @@
 ###
-
-  delay([time])
-  get(url, [data])
-  post(url, [data])
-  serialize(string)
-  timeStamp([arg])
-
+delay([time])
+get(url, [data])
+post(url, [data])
+serialize(string)
+timeStamp([arg])
 ###
 
 $.delay = (time = 0) ->
@@ -35,7 +33,10 @@ $.serialize = (string) ->
       res = {}
       for a in _.trim(string.replace /\?/g, '').split '&'
         b = a.split '='
-        [key, value] = [_.trim(b[0]), _.trim b[1]]
+        [key, value] = [
+          _.trim b[0]
+          _.trim b[1]
+        ]
         if key.length then res[key] = value
       res
     else throw new Error 'invalid argument type'

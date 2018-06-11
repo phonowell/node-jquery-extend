@@ -78,7 +78,9 @@ class Logger
     # 'xxx'
     .replace /'.*?'/g, (text) ->
       cont = text.replace /'/g, ''
-      "'#{colors.magenta cont}'"
+      if cont.length
+        colors.magenta cont
+      else "''"
     
     message # return
 
