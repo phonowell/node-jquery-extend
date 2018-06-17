@@ -79,7 +79,7 @@ class Logger
     .replace /'.*?'/g, (text) ->
       cont = text.replace /'/g, ''
       if cont.length
-        colors.magenta cont
+        chalk.magenta cont
       else "''"
     
     message # return
@@ -95,7 +95,7 @@ class Logger
     cache = @['__cache_separator__']
     if cache then return cache
 
-    stringSeparator = colors.gray '›'
+    stringSeparator = chalk.gray '›'
 
     # return
     @['__cache_separator__'] = "#{stringSeparator} "
@@ -108,7 +108,7 @@ class Logger
     if ts == cache[0] then return cache[1]
     cache[0] = ts
 
-    stringTime = colors.gray "[#{@getStringTime()}]"
+    stringTime = chalk.gray "[#{@getStringTime()}]"
 
     # return
     cache[1] = "#{stringTime} "
@@ -124,7 +124,7 @@ class Logger
     if type == 'default'
       return cache[type] = ''
 
-    stringContent = colors.underline colors.cyan type
+    stringContent = chalk.underline.cyan type
     stringPad = _.repeat ' ', 10 - type.length
     
     # return

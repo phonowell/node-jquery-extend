@@ -5,7 +5,7 @@ module.exports = $ = require 'node-jquery-lite'
 axios = require 'axios'
 qs = require 'qs'
 
-colors = require 'colors/safe'
+chalk = require 'chalk'
 
 # lodash
 

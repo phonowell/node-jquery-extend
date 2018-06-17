@@ -1,5 +1,5 @@
 (function() {
-  var $, Logger, _, axios, colors, logger, qs;
+  var $, Logger, _, axios, chalk, logger, qs;
 
   module.exports = $ = require('node-jquery-lite');
 
@@ -8,7 +8,7 @@
 
   qs = require('qs');
 
-  colors = require('colors/safe');
+  chalk = require('chalk');
 
   // lodash
   ({_} = $);
@@ -169,7 +169,7 @@
           var cont;
           cont = text.replace(/'/g, '');
           if (cont.length) {
-            return colors.magenta(cont);
+            return chalk.magenta(cont);
           } else {
             return "''";
           }
@@ -187,7 +187,7 @@
         if (cache) {
           return cache;
         }
-        stringSeparator = colors.gray('›');
+        stringSeparator = chalk.gray('›');
         // return
         return this['__cache_separator__'] = `${stringSeparator} `;
       }
@@ -200,7 +200,7 @@
           return cache[1];
         }
         cache[0] = ts;
-        stringTime = colors.gray(`[${this.getStringTime()}]`);
+        stringTime = chalk.gray(`[${this.getStringTime()}]`);
         // return
         return cache[1] = `${stringTime} `;
       }
@@ -216,7 +216,7 @@
         if (type === 'default') {
           return cache[type] = '';
         }
-        stringContent = colors.underline(colors.cyan(type));
+        stringContent = chalk.underline.cyan(type);
         stringPad = _.repeat(' ', 10 - type.length);
         
         // return

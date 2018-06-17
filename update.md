@@ -2,6 +2,11 @@
 
 ## UPDATE
 
+### v0.0.25 @ 6.17.2018
+
+- Not required [colors.js](https://github.com/Marak/colors.js) now.
+- Required [chalk](https://github.com/chalk/chalk) now.
+
 ### v0.0.24 @ 6.11.2018
 
 - Updated `$.info()`.
