@@ -2,6 +2,10 @@
 
 ## UPDATE
 
+### v0.0.26 @ 6.19.2018
+
+- Updated project.
+
 ### v0.0.25 @ 6.17.2018
 
 - Not required [colors.js](https://github.com/Marak/colors.js) now.
